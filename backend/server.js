@@ -1,23 +1,23 @@
-const express = require("express")
-const path = require("path")
-const mongoose = require('mongoose');
-const MONGO_URI = 'mongodb+srv://sa:sa@react-blackjack.z4o8rh2.mongodb.net/highscore?retryWrites=true&w=majority&appName=react-blackjack';
-const app = express()
-const PORT = process.env.PORT || 5000
+import express from 'express';
+import path from 'path';
+import cors from 'cors';
+import connectDb from "./config/db.js"
+import userRoute from "./routes/UserRoutes.js"
+import {errorHandler} from './utils/ErrorHandler.js';
+
+const app = express();
+const PORT = process.env.PORT || 5000;
 
 app.use(express.json())
+app.use(cors())
 
-app.get("/api/test", (req, res) =>{
-    res.json({msg: "api set"})
+// Routes
+app.use(["/user", "/users"], userRoute);
+
+connectDb().then(() => {
+    app.listen(PORT, () => {
+        console.log(`server running on http://localhost:${PORT}`)
+    })
 })
 
-mongoose.connect(MONGO_URI)
-    .then(() => {
-        console.log("db connected");
-        app.listen(PORT, () => {
-            console.log(`server running on port ${PORT}`)
-        })
-        
-    }).catch((error) =>{
-        console.log(error);
-    })
+app.use(errorHandler);
