@@ -4,7 +4,7 @@ const Header = () => {
     return (
         <div className="container text-center">
             <h1 className="h1">
-                Joko'Ireng
+                BLVKJVCK
             </h1>
         </div>
     )

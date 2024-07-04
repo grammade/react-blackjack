@@ -4,10 +4,13 @@ import GameButton from "./GameButton";
 import Wl from "./WLRatio";
 
 const BlackJackGame = () => {
-    const [dealerHand, setDealerHand] = useState([])
-    const [playerHand, setPlayerHand] = useState([])
+    const [dealerHand, setDealerHand] = useState("-")
+    const [playerHand, setPlayerHand] = useState("-")
+    const [dealerSum, setDealerSum] = useState("-")
+    const [playerSum, setPlayerSum] = useState("-")
     const [wlRatio, setWlRatio] = useState("0/0")
     const [gameStarted, setGameStarted] = useState(false)
+    
 
 
     const startGame = () => {
@@ -29,24 +32,22 @@ const BlackJackGame = () => {
 
             <h3 className="mb-4">Dealer's hand:</h3>
             <div className="card-container mb-4">
-                <h2 id="dealerHand">{dealerHand.join(', ')}</h2>
-                <h3 id="dealerHandCount" className="hand-count">{dealerHand.length}</h3>
+                <h2 id="dealerHand">{dealerHand}</h2>
+                <h3 id="dealerHandSum" className="hand-sum">{dealerSum}</h3>
             </div>
 
             <h3 className="mb-4">Your hand:</h3>
             <div className="card-container mb-4">
-                <h2 id="hand">{playerHand.join(', ')}</h2>
-                <h3 id="handCount" className="hand-count">{playerHand.length}</h3>
+                <h2 id="hand">{playerHand}</h2>
+                <h3 id="handSum" className="hand-sum">{playerSum}</h3>
             </div>
 
             <GameButton
                 onStart={startGame}
                 onHit={handleHit}
                 onStand={handleStand}
-                state={false}
+                gameStart={false}
             />
-
-            <Wl ratio={wlRatio}/>
         </div>
     );
 }
