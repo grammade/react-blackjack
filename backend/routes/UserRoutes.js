@@ -13,17 +13,20 @@ async function findUser(req, res){
     return user
 }
 
-router.post("/update", asyncHandler(async (req, res) =>{
+router.post("/set", asyncHandler(async (req, res) =>{
     let user = await findUser(req, res);
-}))
-
-router.post("/set", asyncHandler(async (req, res) => {
-    let user = await findUser(req, res);
+    //update to mongo
+    let dto = {...req.body}
+    if(dto.state === "win")
+        user.win++
+    else
+        user.loss++
     
+    await user.save()
     return res.status(200).json(user)
 }))
 
-router.post("/", async (req, res) => {
+router.post("/", asyncHandler(async (req, res) => {
     const {username} = req.body
     const existingUser = await User.findOne({username})
     
@@ -35,11 +38,11 @@ router.post("/", async (req, res) => {
     console.log(`user ${username} is created`)
     
     return res.status(201).json(newUser)
-})
+}))
 
-router.get("/", async(req,res) =>{
+router.get("/", asyncHandler(async(req,res) =>{
     const users = await User.find()
     return res.json(users)
-})
+}))
 
 export default router
