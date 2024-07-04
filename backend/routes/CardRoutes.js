@@ -2,12 +2,6 @@ import express from "express";
 
 const router = express.Router()
 
-const Suits = {
-    Hearts: 0,
-    Diamonds: 1,
-    Clubs: 2,
-    Spades: 3
-};
 var deck = [
     { suit: "hearts",   cards: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10] },  // Values for one suit (e.g., hearts)
     { suit: "diamonds", cards: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10] },  // Values for another suit (e.g., diamonds)
