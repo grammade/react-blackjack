@@ -9,7 +9,6 @@ function App() {
   return (
     <div className="App">
       <BlackJackGame />
-      <Wl ratio={"0/0"} />
     </div>
   );
 }

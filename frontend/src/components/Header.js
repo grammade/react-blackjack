@@ -2,9 +2,9 @@ import React from "react";
 
 const Header = () => {
     return (
-        <div className="container text-center">
-            <h1 className="h1">
-                BLVKJVCK
+        <div className="headerContainer">
+            <h1 className="h1 header">
+                BLVK JVCK
             </h1>
         </div>
     )

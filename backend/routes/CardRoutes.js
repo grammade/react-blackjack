@@ -3,10 +3,17 @@ import express from "express";
 const router = express.Router()
 
 var deck = [
-    { suit: "hearts",   cards: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10] },  // Values for one suit (e.g., hearts)
-    { suit: "diamonds", cards: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10] },  // Values for another suit (e.g., diamonds)
-    { suit: "clubs",    cards: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10] },  // Values for another suit (e.g., clubs)
-    { suit: "spades",   cards: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10] }   // Values for another suit (e.g., spades)
+    { suit: "hearts",   cards: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K", "A"] },  // Values for one suit (e.g., hearts)
+    { suit: "diamonds", cards: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K", "A"] },  // Values for another suit (e.g., diamonds)
+    { suit: "clubs",    cards: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K", "A"] },  // Values for another suit (e.g., clubs)
+    { suit: "spades",   cards: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K", "A"] }   // Values for another suit (e.g., spades)
+]
+
+var cardSuits = [
+    "♥",
+    "♦",
+    "♣",
+    "♠"
 ]
 
 router.get("/draw", (req, res) => {
@@ -25,7 +32,7 @@ router.get("/draw", (req, res) => {
 
     suit.cards.splice(cardIndex, 1)
 
-    res.status(200).json({ suit: suitIndex, card: cardVal })
+    res.status(200).json({ suit: cardSuits[suitIndex], card: cardVal })
 })
 
 router.get("/check", (req, res) => {
