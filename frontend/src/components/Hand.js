@@ -1,10 +1,9 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 
-const Hand = ({suit, cardValue}) => {
-    
-    
-    return(
-        <div className="card">
+const Hand = ({ suit, cardValue, className, width, animation }) => {
+
+    return (
+        <div className={`card ${className}`} style={{ width: width}}>
             <div className="suit" data-suit={suit}>
                 {suit}
             </div>

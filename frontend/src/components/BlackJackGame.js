@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Header from "./Header";
 import GameButton from "./GameButton";
 import Wl from "./WLRatio";
@@ -11,34 +11,39 @@ const BlackJackGame = () => {
     const [playerHand, setPlayerHand] = useState([])
     const [dealerSum, setDealerSum] = useState("-")
     const [playerSum, setPlayerSum] = useState()
+    const [deckCount, setDeckCount] = useState()
     const [wlRatio, setWlRatio] = useState("0/0")
     const [gameStarted, setGameStarted] = useState(false)
-
-    const handleHit = async (state) => {
-        console.log("hit")
-
-        const hand = await drawCard();
-        const newHand = [...playerHand, hand]
-        const newSum = newHand.reduce((sum, card ) => {
-            if(Number.isInteger(card.value))
-                return sum += parseInt(card.value)
-            else
-                return sum += handleFace(card.value, playerSum)
-        }, 0)
-        console.log(newSum)
-        setPlayerHand(newHand)
-        setPlayerSum(newSum)
-    }
+    const [cardWidth, setCardWidth] = useState(100)
+    const ref = useRef(null)
+    const [containerWidth, setContainerWidth] = useState(0)
 
     const handleStand = () => {
         console.log("stand")
     }
-    
-    function handleFace(face, sum){
-        if(face !== "A")
-            return 10
-        return sum+11 <= 21 ? 11 : 1
+
+    const updatePlayerHand = (hand) => {
+        setPlayerHand(hand)
     }
+
+    const getContainerSize = () => containerWidth
+
+    useEffect(() => {
+        const getSize = () =>{
+            if (ref.current) {
+                if (ref.current.offsetWidth) {
+                    setContainerWidth(ref.current.offsetWidth)
+                }
+            }
+        }
+        
+        getSize()
+        window.addEventListener("resize", getSize)
+        return () =>{
+            window.removeEventListener("resize", getSize)
+        }
+    }, [ref])
+
     return (
         <div>
             <Header />
@@ -60,11 +65,17 @@ const BlackJackGame = () => {
                 </div>
 
                 <h3 className="mb-4">Your hand:</h3>
-                <div className="card-container mb-4">
-                    <h2 id="hand" className="cardHand">
+                <div id="cardContainer" className="card-container mb-4" ref={ref}>
+                    <h2 id="hand" className="cardHand" >
                         {
                             playerHand.map((card, index) => (
-                                <Hand key={index} suit={card.suit} cardValue={card.value}/>
+                                <Hand
+                                    key={index}
+                                    suit={card.suit}
+                                    cardValue={card.value}
+                                    className={index === playerHand.length - 1 ? 'fade-in' : ''}
+                                    width={cardWidth}
+                                />
                             ))
                         }
                     </h2>
@@ -72,9 +83,14 @@ const BlackJackGame = () => {
                 </div>
 
                 <GameButton
-                    handleHit={handleHit}
+                    getContainerSize={getContainerSize}
                     handleStand={handleStand}
                     gameStart={gameStarted}
+                    setPlayerHand={updatePlayerHand}
+                    setPlayerSum={setPlayerSum}
+                    playerHand={playerHand}
+                    playerSum={playerSum}
+                    setCardWidth={setCardWidth}
                 />
             </div>
             <Wl ratio={"0/0"} />

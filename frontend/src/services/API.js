@@ -7,7 +7,8 @@ export const drawCard = async () =>{
         const res = await axios.get(`${host}/card/draw`)
         return {
             suit: res.data.suit,
-            value: res.data.card
+            value: res.data.card,
+            deckCount: res.data.deckCount
         }
     }catch(e){
         console.error(e)
