@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const Hand = ({ suit, cardValue, className, width, animation }) => {
+const Card = ({ suit, cardValue, className, width, animation }) => {
 
     return (
         <div className={`card ${className}`} style={{ width: width}}>
@@ -14,4 +14,4 @@ const Hand = ({ suit, cardValue, className, width, animation }) => {
     )
 }
 
-export default Hand
+export default Card

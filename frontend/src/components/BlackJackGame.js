@@ -2,7 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import Header from "./Header";
 import GameButton from "./GameButton";
 import Wl from "./WLRatio";
-import Hand from "./Hand";
+import Card from "./Card";
+
+import "./BlackJack.css"
 
 import { drawCard } from "../services/API";
 
@@ -11,12 +13,11 @@ const BlackJackGame = () => {
     const [playerHand, setPlayerHand] = useState([])
     const [dealerSum, setDealerSum] = useState("-")
     const [playerSum, setPlayerSum] = useState()
-    const [deckCount, setDeckCount] = useState()
     const [wlRatio, setWlRatio] = useState("0/0")
     const [gameStarted, setGameStarted] = useState(false)
     const [cardWidth, setCardWidth] = useState(100)
-    const ref = useRef(null)
     const [containerWidth, setContainerWidth] = useState(0)
+    const ref = useRef(null)
 
     const handleStand = () => {
         console.log("stand")
@@ -52,11 +53,11 @@ const BlackJackGame = () => {
                 <h3 className="mb-4">Dealer's hand:</h3>
                 <div className="card-container mb-4">
                     <h2 id="dealerHand" className="cardHand">
-                        <Hand
+                        <Card
                             suit={"♣"}
                             cardValue={"10"}
                         />
-                        <Hand
+                        <Card
                             suit={"♣"}
                             cardValue={"10"}
                         />
@@ -69,7 +70,7 @@ const BlackJackGame = () => {
                     <h2 id="hand" className="cardHand" >
                         {
                             playerHand.map((card, index) => (
-                                <Hand
+                                <Card
                                     key={index}
                                     suit={card.suit}
                                     cardValue={card.value}

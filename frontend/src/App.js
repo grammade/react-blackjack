@@ -1,13 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
 import BlackJackGame from './components/BlackJackGame';
-import Wl from './components/WLRatio';
+import Register from './components/modal/Register';
+import arrow_down from './assets/arrow_down.png'
+import "./index.css"
 
-import React, { useState, useEffect } from "react"
+import React, {useState} from "react"
 
 function App() {
+
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const closeModal = () => {
+    setIsModalOpen = false
+  }
+  
+  const openModal = () => {
+    setIsModalOpen = true
+  }
+
   return (
     <div className="App">
+      {/* <img className='arrow' src={arrow_down} width={40}/> */}
+      <Register show={isModalOpen} onClose={closeModal}/>
       <BlackJackGame />
     </div>
   );
