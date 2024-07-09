@@ -1,14 +1,18 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Register.css"
 import icon_google from "../../assets/icon_google.png"
 
-import {signInGoogle, signOut} from "../../firebase/auth"
+import { useAuth } from "../../context/authContext";
 
 const Register = ({show, closeModal, animationClass, children}) =>{
+    const {currentUser, userLoggedIn, loading, signInGoogle, signOut} = useAuth()
+    
+    useEffect(() => {
+        console.log(`isUserLoggedIn: ${userLoggedIn}, displayName:${currentUser?.user.displayName}`)
+    }, [])
     if(!show)
         return null;
     
-        
     
     return (
         <div className={`ModalBackground ${animationClass}`} onClick={closeModal}>
@@ -19,7 +23,7 @@ const Register = ({show, closeModal, animationClass, children}) =>{
                     </h1>
                 </div>
                 <div className="ModalBody">
-                    Modal Body
+                    {userLoggedIn ? currentUser.user.displayName : "Guest"}
                 </div>
                 <div className="ModalFooter">
                     <img src={icon_google} height={50} onClick={signInGoogle}/>

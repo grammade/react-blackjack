@@ -35,7 +35,6 @@ const GameButton = ({
             else
                 return sum += handleFace(card.value, playerSum)
         }, 0)
-        console.log(`${contianerSize} / ${newHandLength} = ${cardWidth}`)
         setCardWidth(cardWidth)
         setPlayerHand(newHand)
         setPlayerSum(newSum)

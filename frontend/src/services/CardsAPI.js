@@ -1,8 +1,8 @@
 import axios from "axios"
 
-const host = "http://localhost:5000"
+const host = process.env.REACT_APP_HOST
 
-export const drawCard = async () =>{
+export const drawCard = async() =>{
     try{
         const res = await axios.get(`${host}/card/draw`)
         return {
