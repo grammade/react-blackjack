@@ -66,12 +66,14 @@ const GameButton = ({
         <div className="BtnContainer">
             <div className="CenterButtons">
                 <button onClick={onHit}
+                    style={{width:'100px'}}
                     className={`Btn  mx-1 my-1`}>{btnStartText}</button>
                 <button onClick={onStand}
+                    style={{width:'100px'}}
                     className={`Btn mx-1 my-1 ${!gameState ? 'disabled' : ''}`}>STAND</button>
             </div>
             <button onClick={openModal}
-                className={`Btn StickRight `}>More</button>
+                className={`Btn StickRight `}>Leaderboards</button>
         </div>
     )
 }

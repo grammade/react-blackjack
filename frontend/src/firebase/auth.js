@@ -4,13 +4,17 @@ import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 const signInGoogle = async () => {
     const provider = new GoogleAuthProvider()
     const res = await signInWithPopup(auth, provider)
-        .catch((e) => {console.log(e)})
-    localStorage.setItem("user", JSON.stringify(res));
+        .catch((e) => { console.log(e) })
     return res
 }
 
 const signOut = async () => {
-    return auth.signOut
+    console.log("logging out in auth")
+    return await auth.signOut()
+        .then(() => {
+            console.log("logged out in auth")
+            localStorage.removeItem("user")
+        })
 }
 
-export {signInGoogle, signOut}
+export { signInGoogle, signOut }

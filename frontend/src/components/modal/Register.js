@@ -4,16 +4,17 @@ import icon_google from "../../assets/icon_google.png"
 
 import { useAuth } from "../../context/authContext";
 
-const Register = ({show, closeModal, animationClass, children}) =>{
-    const {currentUser, userLoggedIn, loading, signInGoogle, signOut} = useAuth()
-    
+const Register = ({ show, closeModal, animationClass, children }) => {
+    const { currentUser, userLoggedIn, loading, signInGoogle, signOut } = useAuth()
+
     useEffect(() => {
-        console.log(`isUserLoggedIn: ${userLoggedIn}, displayName:${currentUser?.user.displayName}`)
+        console.log("REGISTER current user:")
+        console.log(currentUser)
     }, [])
-    if(!show)
+    if (!show)
         return null;
-    
-    
+
+
     return (
         <div className={`ModalBackground ${animationClass}`} onClick={closeModal}>
             <div className="ModalContent" onClick={(e) => e.stopPropagation()}>
@@ -23,11 +24,21 @@ const Register = ({show, closeModal, animationClass, children}) =>{
                     </h1>
                 </div>
                 <div className="ModalBody">
-                    {userLoggedIn ? currentUser.user.displayName : "Guest"}
                 </div>
-                <div className="ModalFooter">
-                    <img src={icon_google} height={50} onClick={signInGoogle}/>
-                </div>
+                {userLoggedIn ? (
+                    <>
+                        <span className="fadeIn">{currentUser?.displayName}</span>
+                        <button className="Btn  mx-1 my-1 fadeIn" onClick={signOut}>Logout</button>
+                    </>
+                ) : (
+                    <img
+                        src={icon_google}
+                        height={50}
+                        onClick={signInGoogle}
+                        className="IconGoogle fadeIn"
+                        alt="Google Icon"
+                    />
+                )}
             </div>
         </div>
     )

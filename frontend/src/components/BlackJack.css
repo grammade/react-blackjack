@@ -58,12 +58,13 @@ body {
 
 .Btn {
   background-color: rgba(0, 0, 0, 0.4);
-  width: 100px;
+  width: auto;
   color: white;
   border-color: transparent;
   border-radius: 5px;
   text-align: center;
   padding-top: 5px; padding-bottom: 5px;
+  padding-left: 10px; padding-right: 10px;
 }
 
 .StickRight{
