@@ -6,7 +6,7 @@ import Card from "./Card";
 
 import "./BlackJack.css"
 
-import { drawCard } from "../services/API";
+import { drawCard } from "../services/CardsAPI";
 
 const BlackJackGame = ({openModal}) => {
     const [dealerHand, setDealerHand] = useState("-")

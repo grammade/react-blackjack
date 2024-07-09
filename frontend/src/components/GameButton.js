@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { drawCard } from "../services/API";
+import { drawCard } from "../services/CardsAPI";
 
 
 
