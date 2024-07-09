@@ -3,25 +3,30 @@ import Register from './components/modal/Register';
 import arrow_down from './assets/arrow_down.png'
 import "./index.css"
 
-import React, {useState} from "react"
+import React, { useState } from "react"
 
 function App() {
 
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [animationClass, setAnimationClass] = useState("fadeIn")
 
   const closeModal = () => {
-    setIsModalOpen = false
+    setAnimationClass("fadeOut")
+    const timer = setTimeout(() => {
+      setIsModalOpen(false)
+    }, 250); 
+    return () => clearTimeout(timer);
   }
-  
+
   const openModal = () => {
-    setIsModalOpen = true
+    setAnimationClass("fadeIn")
+    setIsModalOpen(true)
   }
 
   return (
     <div className="App">
-      {/* <img className='arrow' src={arrow_down} width={40}/> */}
-      <Register show={isModalOpen} onClose={closeModal}/>
-      <BlackJackGame />
+      <Register show={isModalOpen} closeModal={closeModal} animationClass={animationClass} />
+      <BlackJackGame openModal={openModal} />
     </div>
   );
 }

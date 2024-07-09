@@ -3,15 +3,16 @@ import { drawCard } from "../services/API";
 
 
 
-const GameButton = ({ 
+const GameButton = ({
     getContainerSize,
-    handleStand, 
-    gameStart, 
-    setPlayerHand, 
-    setPlayerSum, 
-    playerHand, 
-    playerSum, 
-    setCardWidth }) => {
+    handleStand,
+    gameStart,
+    setPlayerHand,
+    setPlayerSum,
+    playerHand,
+    playerSum,
+    setCardWidth,
+    openModal }) => {
 
     function handleFace(face, sum) {
         if (face !== "A")
@@ -26,8 +27,8 @@ const GameButton = ({
         const hand = await drawCard();
         const newHand = [...playerHand, hand]
         const newHandLength = newHand.length;
-        const cardWidth = Math.floor((cardContainer - (newHandLength*4) ) / (newHandLength) );  // Adjust calculation as needed
-        
+        const cardWidth = Math.floor((cardContainer - (newHandLength * 4)) / (newHandLength));  // Adjust calculation as needed
+
         const newSum = newHand.reduce((sum, card) => {
             if (Number.isInteger(card.value))
                 return sum += parseInt(card.value)
@@ -63,11 +64,15 @@ const GameButton = ({
     const [btnStartClass, setBtnStartClass] = useState("primary")
     const [gameState, setGameState] = useState(false)
     return (
-        <div className="btn-container mb-4">
-            <button onClick={onHit}
-                className={`btn btn-${btnStartClass} mx-1 my-1`}>{btnStartText}</button>
-            <button onClick={onStand}
-                className={`btn btn-success mx-1 my-1 ${!gameState ? 'disabled' : ''}`}>STAND</button>
+        <div className="BtnContainer">
+            <div className="CenterButtons">
+                <button onClick={onHit}
+                    className={`Btn  mx-1 my-1`}>{btnStartText}</button>
+                <button onClick={onStand}
+                    className={`Btn mx-1 my-1 ${!gameState ? 'disabled' : ''}`}>STAND</button>
+            </div>
+            <button onClick={openModal}
+                className={`Btn StickRight `}>More</button>
         </div>
     )
 }

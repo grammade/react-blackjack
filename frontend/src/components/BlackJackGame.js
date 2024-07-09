@@ -8,7 +8,7 @@ import "./BlackJack.css"
 
 import { drawCard } from "../services/API";
 
-const BlackJackGame = () => {
+const BlackJackGame = ({openModal}) => {
     const [dealerHand, setDealerHand] = useState("-")
     const [playerHand, setPlayerHand] = useState([])
     const [dealerSum, setDealerSum] = useState("-")
@@ -92,6 +92,7 @@ const BlackJackGame = () => {
                     playerHand={playerHand}
                     playerSum={playerSum}
                     setCardWidth={setCardWidth}
+                    openModal={openModal}
                 />
             </div>
             <Wl ratio={"0/0"} />

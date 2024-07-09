@@ -7,6 +7,20 @@ body,
   overflow: hidden;
 }
 
+.header {
+  font-weight: 700;
+  font-size: 400px;
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background: -webkit-linear-gradient(right, #721b63, #002352);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-wrap: nowrap;
+  z-index: -10;
+}
+
 body {
   background: linear-gradient(to bottom right, #882474, #122a42);
   color: white;
@@ -24,16 +38,44 @@ body {
   margin: 0;
 }
 
-.btn-container {
+.BtnContainer {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   gap: 10px;
   margin-bottom: 20px;
 }
 
-.btn {
+.CenterButtons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    position: absolute; /* Position absolute within the container */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Center horizontally */
+}
+
+.Btn {
+  background-color: rgba(0, 0, 0, 0.4);
   width: 100px;
+  color: white;
+  border-color: transparent;
+  border-radius: 5px;
+  text-align: center;
+  padding-top: 5px; padding-bottom: 5px;
+}
+
+.StickRight{
+  margin-left: auto;
+}
+
+.Btn:hover {
+    background-color: rgba(0, 0, 0, 0.7); /* Slightly darker on hover */
+}
+
+.Btn:active {
+    background-color: rgba(0, 0, 0, 0.9); /* Even darker when clicked */
 }
 
 .wl-ratio-container {
@@ -41,19 +83,6 @@ body {
   width: 100%;
   padding: 10px;
   border-radius: 5px;
-}
-
-.header {
-  font-weight: 700;
-  font-size: 400px;
-  position: fixed;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  background: -webkit-linear-gradient(right, #721b63, #002352);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-wrap: nowrap;
 }
 
 .headerContainer {
@@ -117,15 +146,15 @@ body {
   flex: 0 1 auto; /* Allow flexible width, not shrinking beyond content size */
   max-width: 100px; /* Limit maximum width */
   min-width: 30px; /* Limit minimum width */
-  transition: width 1s ease-out;
+  transition: width 0.5s ease-out;
 }
 
 .card.fade-in {
-  animation: fadeInFromRight 1s ease-out;
+  animation: fadeInFromRight 0.5s ease-out;
 }
 
 .card.move-left {
-  animation: moveLeft 1s ease-out;
+  animation: moveLeft 0.5s ease-out;
 }
 
 @keyframes fadeInFromRight {
