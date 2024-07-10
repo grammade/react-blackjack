@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { AuthProvider } from '../context/authContext';
 import Header from "./Header";
 import GameButton from "./GameButton";
 import Wl from "./WLRatio";
@@ -8,7 +9,7 @@ import "./BlackJack.css"
 
 import { drawCard } from "../services/CardsAPI";
 
-const BlackJackGame = ({openModal}) => {
+const BlackJackGame = ({ openModal }) => {
     const [dealerHand, setDealerHand] = useState("-")
     const [playerHand, setPlayerHand] = useState([])
     const [dealerSum, setDealerSum] = useState("-")
@@ -30,17 +31,17 @@ const BlackJackGame = ({openModal}) => {
     const getContainerSize = () => containerWidth
 
     useEffect(() => {
-        const getSize = () =>{
+        const getSize = () => {
             if (ref.current) {
                 if (ref.current.offsetWidth) {
                     setContainerWidth(ref.current.offsetWidth)
                 }
             }
         }
-        
+
         getSize()
         window.addEventListener("resize", getSize)
-        return () =>{
+        return () => {
             window.removeEventListener("resize", getSize)
         }
     }, [ref])
@@ -82,7 +83,6 @@ const BlackJackGame = ({openModal}) => {
                     </h2>
                     <h3 id="handSum" className="hand-sum">{playerSum}</h3>
                 </div>
-
                 <GameButton
                     getContainerSize={getContainerSize}
                     handleStand={handleStand}

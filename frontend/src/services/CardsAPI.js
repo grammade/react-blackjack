@@ -2,9 +2,13 @@ import axios from "axios"
 
 const host = process.env.REACT_APP_HOST
 
-export const drawCard = async() =>{
+export const drawCard = async(sessionId) =>{
     try{
-        const res = await axios.get(`${host}/card/draw`)
+        console.log(`drawing card session: `)
+        console.log(sessionId)
+        const res = await axios.get(`${host}/card/draw/${sessionId}`)
+        console.log(`drawing card: `)
+        console.log(res.data)
         return {
             suit: res.data.suit,
             value: res.data.card,

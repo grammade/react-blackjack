@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { drawCard } from "../services/CardsAPI";
-
+import { getSession } from "../services/UsersAPI";
+import { useAuth } from "../context/authContext";
 
 
 const GameButton = ({
@@ -13,6 +14,7 @@ const GameButton = ({
     playerSum,
     setCardWidth,
     openModal }) => {
+    const { currentUser, userLoggedIn, loading, guestUid, signInGoogle, signOut } = useAuth()
 
     function handleFace(face, sum) {
         if (face !== "A")
@@ -21,10 +23,19 @@ const GameButton = ({
     }
 
     const handleHit = async () => {
-        const contianerSize = getContainerSize()
-        const cardContainer = contianerSize - 20
+        let session = null
+        let uid = null
+        if(userLoggedIn){
+            uid = currentUser.uid
+            session = await getSession(uid)
+        }else{
+            uid = guestUid
+            session = await getSession(uid)
+            //change get session for guest
+        }
 
-        const hand = await drawCard();
+        const cardContainer = getContainerSize() - 20
+        const hand = await drawCard(session.session);
         const newHand = [...playerHand, hand]
         const newHandLength = newHand.length;
         const cardWidth = Math.floor((cardContainer - (newHandLength * 4)) / (newHandLength));  // Adjust calculation as needed
@@ -35,6 +46,8 @@ const GameButton = ({
             else
                 return sum += handleFace(card.value, playerSum)
         }, 0)
+
+
         setCardWidth(cardWidth)
         setPlayerHand(newHand)
         setPlayerSum(newSum)
@@ -45,7 +58,7 @@ const GameButton = ({
             startGame();
         }
 
-        handleHit("start")
+        handleHit()
     }
 
     const onStand = () => {
@@ -66,10 +79,10 @@ const GameButton = ({
         <div className="BtnContainer">
             <div className="CenterButtons">
                 <button onClick={onHit}
-                    style={{width:'100px'}}
+                    style={{ width: '100px' }}
                     className={`Btn  mx-1 my-1`}>{btnStartText}</button>
                 <button onClick={onStand}
-                    style={{width:'100px'}}
+                    style={{ width: '100px' }}
                     className={`Btn mx-1 my-1 ${!gameState ? 'disabled' : ''}`}>STAND</button>
             </div>
             <button onClick={openModal}

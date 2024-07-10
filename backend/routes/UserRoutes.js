@@ -8,9 +8,10 @@ const router = express.Router()
 const generateSession = () => uuidv6()
 
 router.get("/session", asyncHandler(async (req, res) =>{
-    const {uid} = req.body
+    const {uid} = req.query
     const session = generateSession()
     const userSession = new UserSession({uid, session})
+    console.log(req.query)
     
     await userSession.save().catch((e) => {
         return res.status(500).send("Failed to create a session")

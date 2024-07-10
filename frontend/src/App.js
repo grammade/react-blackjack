@@ -28,8 +28,8 @@ function App() {
     <div className="App">
       <AuthProvider>
         <Register show={isModalOpen} closeModal={closeModal} animationClass={animationClass} />
-      </AuthProvider>
       <BlackJackGame openModal={openModal} />
+      </AuthProvider>
     </div>
   );
 }

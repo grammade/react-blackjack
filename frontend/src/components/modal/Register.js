@@ -6,11 +6,6 @@ import { useAuth } from "../../context/authContext";
 
 const Register = ({ show, closeModal, animationClass, children }) => {
     const { currentUser, userLoggedIn, loading, signInGoogle, signOut } = useAuth()
-
-    useEffect(() => {
-        console.log("REGISTER current user:")
-        console.log(currentUser)
-    }, [])
     if (!show)
         return null;
 
