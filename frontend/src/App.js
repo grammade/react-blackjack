@@ -4,6 +4,7 @@ import arrow_down from './assets/arrow_down.png'
 import "./index.css"
 
 import React, { useState } from "react"
+import { AuthProvider } from './context/authContext';
 
 function App() {
 
@@ -14,7 +15,7 @@ function App() {
     setAnimationClass("fadeOut")
     const timer = setTimeout(() => {
       setIsModalOpen(false)
-    }, 250); 
+    }, 250);
     return () => clearTimeout(timer);
   }
 
@@ -25,7 +26,9 @@ function App() {
 
   return (
     <div className="App">
-      <Register show={isModalOpen} closeModal={closeModal} animationClass={animationClass} />
+      <AuthProvider>
+        <Register show={isModalOpen} closeModal={closeModal} animationClass={animationClass} />
+      </AuthProvider>
       <BlackJackGame openModal={openModal} />
     </div>
   );

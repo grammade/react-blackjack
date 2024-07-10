@@ -1,12 +1,27 @@
 import express  from "express";
 import User from "../models/user.js";
+import UserSession from "../models/userSession.js";
 import asyncHandler from "../utils/AsyncHandler.js";
+import {v6 as uuidv6} from "uuid"
 
 const router = express.Router()
+const generateSession = () => uuidv6()
+
+router.get("/session", asyncHandler(async (req, res) =>{
+    const {uid} = req.body
+    const session = generateSession()
+    const userSession = new UserSession({uid, session})
+    
+    await userSession.save().catch((e) => {
+        return res.status(500).send("Failed to create a session")
+    })
+    
+    return res.status(200).send(JSON.stringify(userSession))
+}))
 
 async function findUser(req, res){
-    const {username} = req.body
-    const user = await User.findOne({username})
+    const {uid} = req.body
+    const user = await User.findOne({uid})
     
     if(!user)
         throw Object.assign(new Error('User not found'), { status: 404 });
@@ -15,7 +30,6 @@ async function findUser(req, res){
 
 router.post("/set", asyncHandler(async (req, res) =>{
     let user = await findUser(req, res);
-    //update to mongo
     let dto = {...req.body}
     if(dto.state === "win")
         user.win++
@@ -27,15 +41,15 @@ router.post("/set", asyncHandler(async (req, res) =>{
 }))
 
 router.post("/", asyncHandler(async (req, res) => {
-    const {username} = req.body
-    const existingUser = await User.findOne({username})
+    const {uid} = req.body
+    const existingUser = await User.findOne({uid})
     
     if(existingUser)
-        return res.status(400).json({msg: `user ${username} already exists`})
+        return res.status(400).json({msg: `user ${uid} already exists`})
     
-    const newUser = new User({username})
+    const newUser = new User({uid})
     await newUser.save()
-    console.log(`user ${username} is created`)
+    console.log(`user ${uid} is created`)
     
     return res.status(201).json(newUser)
 }))
