@@ -5,11 +5,14 @@ import GameButton from "./GameButton";
 import Wl from "./WLRatio";
 import Card from "./Card";
 
+import { drawCard } from "../services/CardsAPI";
+import { getSession } from "../services/UsersAPI";
+import { useAuth } from "../context/authContext";
+
 import "./BlackJack.css"
 
-import { drawCard } from "../services/CardsAPI";
-
 const BlackJackGame = ({ openModal }) => {
+    const { currentUser, userLoggedIn, loading, guestUid, signInGoogle, signOut } = useAuth()
     const [dealerHand, setDealerHand] = useState("-")
     const [playerHand, setPlayerHand] = useState([])
     const [dealerSum, setDealerSum] = useState("-")
@@ -19,6 +22,10 @@ const BlackJackGame = ({ openModal }) => {
     const [cardWidth, setCardWidth] = useState(100)
     const [containerWidth, setContainerWidth] = useState(0)
     const ref = useRef(null)
+    
+    useEffect(() => {
+        
+    },[])
 
     const handleStand = () => {
         console.log("stand")

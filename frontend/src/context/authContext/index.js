@@ -17,17 +17,20 @@ export function AuthProvider({ children }) {
     const [guestUid, setGuestUid] = useState(null)
 
     useEffect(() => {
-        const storedUser = localStorage.getItem("user")
+        if(!userLoggedIn)
+            localStorage.removeItem("session")
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
                 console.log("USER LOGGING IN")
                 localStorage.setItem("user", JSON.stringify(user))
+                localStorage.removeItem("session")
                 setUserLoggedIn(true)
                 setGuestUid(null)
                 setCurrentUser(user)
             } else {
                 console.warn("USER LOGGING OUT")
                 localStorage.removeItem("user")
+                localStorage.removeItem("session")
                 setUserLoggedIn(false)
                 const guid = uuidv6()
                 console.log(`generating new guest uid guest-${guid}`)

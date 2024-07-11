@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { drawCard } from "../services/CardsAPI";
 import { getSession } from "../services/UsersAPI";
 import { useAuth } from "../context/authContext";
@@ -15,42 +15,37 @@ const GameButton = ({
     setCardWidth,
     openModal }) => {
     const { currentUser, userLoggedIn, loading, guestUid, signInGoogle, signOut } = useAuth()
-
-    function handleFace(face, sum) {
-        if (face !== "A")
-            return 10
-        return sum + 11 <= 21 ? 11 : 1
+    
+    const manageSession = async (uid) => {
+        let localSess = localStorage.getItem("session")
+        console.log(`local session exists : ${localSess}`)
+        if(!localSess){
+            localSess = (await getSession(uid)).session
+            localStorage.setItem("session", localSess)
+            console.log(`creating new session: ${localSess}`)
+        }
+        
+        return localSess
     }
 
     const handleHit = async () => {
-        let session = null
         let uid = null
         if(userLoggedIn){
             uid = currentUser.uid
-            session = await getSession(uid)
         }else{
             uid = guestUid
-            session = await getSession(uid)
-            //change get session for guest
         }
+        const session = await manageSession(uid)
 
         const cardContainer = getContainerSize() - 20
-        const hand = await drawCard(session.session);
-        const newHand = [...playerHand, hand]
+        const card = await drawCard(session);
+        const newHand = [...playerHand, card]
         const newHandLength = newHand.length;
-        const cardWidth = Math.floor((cardContainer - (newHandLength * 4)) / (newHandLength));  // Adjust calculation as needed
-
-        const newSum = newHand.reduce((sum, card) => {
-            if (Number.isInteger(card.value))
-                return sum += parseInt(card.value)
-            else
-                return sum += handleFace(card.value, playerSum)
-        }, 0)
-
+        const cardWidth = Math.floor((cardContainer - (newHandLength * 4)) / (newHandLength)); 
 
         setCardWidth(cardWidth)
         setPlayerHand(newHand)
-        setPlayerSum(newSum)
+        setPlayerSum(card.handSum)
     }
 
     const onHit = () => {
@@ -71,6 +66,11 @@ const GameButton = ({
         setBtnStartText("HIT")
         setGameState(true)
     }
+    
+    useEffect(() => {
+        setPlayerHand([])
+        setPlayerSum(0)
+    }, [userLoggedIn])
 
     const [btnStartText, setBtnStartText] = useState("START")
     const [btnStartClass, setBtnStartClass] = useState("primary")

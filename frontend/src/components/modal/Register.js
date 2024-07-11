@@ -23,16 +23,24 @@ const Register = ({ show, closeModal, animationClass, children }) => {
                 {userLoggedIn ? (
                     <>
                         <span className="fadeIn">{currentUser?.displayName}</span>
-                        <button className="Btn  mx-1 my-1 fadeIn" onClick={signOut}>Logout</button>
+                        <button className="Btn  mx-1 my-1 fadeIn"
+                            style={{ width: '100%' }}
+                            onClick={signOut}>
+                            Logout
+                        </button>
                     </>
                 ) : (
-                    <img
-                        src={icon_google}
-                        height={50}
+                    <button
                         onClick={signInGoogle}
-                        className="IconGoogle fadeIn"
-                        alt="Google Icon"
-                    />
+                        style={{ width: '100%' }}
+                        className={`Btn  mx-1 my-1`}>
+                        <img
+                            src={icon_google}
+                            height={30}
+                            className="IconGoogle fadeIn"
+                            alt="Google Icon"
+                        />
+                    </button>
                 )}
             </div>
         </div>
