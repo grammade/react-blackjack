@@ -23,30 +23,26 @@ const BlackJackGame = ({ openModal }) => {
     const [containerWidth, setContainerWidth] = useState(0)
     const ref = useRef(null)
 
-    useEffect(() => {
-        const fetchDealerCard = async () => {
-            let uid = null
-            if (userLoggedIn) {
-                uid = currentUser.uid
-            } else {
-                uid = guestUid
-            }
-            const session = await manageSession(uid)
-            const dealerHand = await drawCardDealer(session)
-            setDealerHand(dealerHand.hand)
-            setDealerSum(dealerHand.handSum)
-            console.log(dealerHand.hand)
+    const fetchDealerCard = async () => {
+        let uid = null
+        if (userLoggedIn) {
+            uid = currentUser.uid
+        } else {
+            uid = guestUid
         }
-    
-        fetchDealerCard()
-        return () => {}
-    }, [])
+        console.log("fetching session from dealer hit")
+        const session = await manageSession(uid)
+        const dealerHand = await drawCardDealer(session)
+        setDealerHand(dealerHand.hand)
+        setDealerSum("?")
+    }
     
     const handleStand = () => {
         console.log("stand")
     }
 
     const updatePlayerHand = (hand) => {
+        console.log(`new hand set: ${JSON.stringify(hand)}`)
         setPlayerHand(hand)
     }
 
@@ -80,8 +76,9 @@ const BlackJackGame = ({ openModal }) => {
                             dealerHand.map((card, index) => (
                                 <Card 
                                     key={index}
-                                    suit={card.suit}
-                                    cardValue={card.card}
+                                    suit={index === dealerHand.length-1 ? "" : card.suit}
+                                    cardValue={index === dealerHand.length-1 ? "" : card.card}
+                                    className={index === dealerHand.length - 1 ? 'face-down' : ''}
                                 />
                             ))
                         }
@@ -116,6 +113,7 @@ const BlackJackGame = ({ openModal }) => {
                     playerSum={playerSum}
                     setCardWidth={setCardWidth}
                     openModal={openModal}
+                    fetchDealerCard={fetchDealerCard}
                 />
             </div>
             <Wl ratio={"0/0"} />

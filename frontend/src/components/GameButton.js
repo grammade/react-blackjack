@@ -13,8 +13,10 @@ const GameButton = ({
     playerHand,
     playerSum,
     setCardWidth,
-    openModal }) => {
+    openModal,
+    fetchDealerCard }) => {
     const { currentUser, userLoggedIn, loading, guestUid, signInGoogle, signOut, manageSession } = useAuth()
+    
 
     const handleHit = async () => {
         let uid = null
@@ -30,43 +32,42 @@ const GameButton = ({
         const newHand = [...playerHand, card]
         const newHandLength = newHand.length;
         const cardWidth = Math.floor((cardContainer - (newHandLength * 4)) / (newHandLength)); 
+        
+        console.log(`new card: ${JSON.stringify(card)}`)
+        console.log(`oldHand: ${JSON.stringify(playerHand)}`)
+        console.log(`newHand: ${JSON.stringify(newHand)}`)
 
         setCardWidth(cardWidth)
         setPlayerHand(newHand)
         setPlayerSum(card.handSum)
     }
 
-    const onHit = () => {
-        if (!gameStart) {
-            startGame();
-        }
-
-        handleHit()
-    }
-
     const onStand = () => {
         console.log("onStand GameBtn")
     }
 
-    function startGame() {
+    const startGame = async() => {
         gameStart = true
         setBtnStartClass("success")
         setBtnStartText("HIT")
         setGameState(true)
+        await fetchDealerCard()
+        setHitHandler(() => handleHit)
     }
     
     useEffect(() => {
         setPlayerHand([])
-        setPlayerSum(0)
+        setPlayerSum("-")
     }, [userLoggedIn])
 
     const [btnStartText, setBtnStartText] = useState("START")
     const [btnStartClass, setBtnStartClass] = useState("primary")
     const [gameState, setGameState] = useState(false)
+    const [hitHanlder, setHitHandler] = useState(() => startGame)
     return (
         <div className="BtnContainer">
             <div className="CenterButtons">
-                <button onClick={onHit}
+                <button onClick={hitHanlder}
                     style={{ width: '100px' }}
                     className={`Btn  mx-1 my-1`}>{btnStartText}</button>
                 <button onClick={onStand}
