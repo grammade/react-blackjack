@@ -42,7 +42,6 @@ const BlackJackGame = ({ openModal }) => {
     }
 
     const updatePlayerHand = (hand) => {
-        console.log(`new hand set: ${JSON.stringify(hand)}`)
         setPlayerHand(hand)
     }
 
