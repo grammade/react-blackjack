@@ -2,6 +2,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../firebase/firebase";
 import React, { useContext, useEffect, useState } from "react";
 import { signInGoogle, signOut } from "../../firebase/auth";
+import { getSession } from "../../services/UsersAPI";
 import {v6 as uuidv6} from "uuid"
 
 const AuthContext = React.createContext();
@@ -41,6 +42,18 @@ export function AuthProvider({ children }) {
         })
         return () => unsubscribe();
     }, [])
+    
+    const manageSession = async (uid) => {
+        let localSess = localStorage.getItem("session")
+        console.log(`local session exists : ${localSess}`)
+        if(!localSess){
+            localSess = (await getSession(uid)).session
+            localStorage.setItem("session", localSess)
+            console.log(`creating new session: ${localSess}`)
+        }
+        
+        return localSess
+    }
 
     const value = {
         currentUser,
@@ -48,7 +61,8 @@ export function AuthProvider({ children }) {
         loading,
         guestUid,
         signInGoogle,
-        signOut
+        signOut,
+        manageSession
     }
 
     return (

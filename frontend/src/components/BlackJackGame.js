@@ -5,15 +5,15 @@ import GameButton from "./GameButton";
 import Wl from "./WLRatio";
 import Card from "./Card";
 
-import { drawCard } from "../services/CardsAPI";
+import { drawCard, drawCardDealer } from "../services/CardsAPI";
 import { getSession } from "../services/UsersAPI";
 import { useAuth } from "../context/authContext";
 
 import "./BlackJack.css"
 
 const BlackJackGame = ({ openModal }) => {
-    const { currentUser, userLoggedIn, loading, guestUid, signInGoogle, signOut } = useAuth()
-    const [dealerHand, setDealerHand] = useState("-")
+    const { currentUser, userLoggedIn, loading, guestUid, signInGoogle, signOut, manageSession } = useAuth()
+    const [dealerHand, setDealerHand] = useState([])
     const [playerHand, setPlayerHand] = useState([])
     const [dealerSum, setDealerSum] = useState("-")
     const [playerSum, setPlayerSum] = useState()
@@ -22,11 +22,26 @@ const BlackJackGame = ({ openModal }) => {
     const [cardWidth, setCardWidth] = useState(100)
     const [containerWidth, setContainerWidth] = useState(0)
     const ref = useRef(null)
-    
-    useEffect(() => {
-        
-    },[])
 
+    useEffect(() => {
+        const fetchDealerCard = async () => {
+            let uid = null
+            if (userLoggedIn) {
+                uid = currentUser.uid
+            } else {
+                uid = guestUid
+            }
+            const session = await manageSession(uid)
+            const dealerHand = await drawCardDealer(session)
+            setDealerHand(dealerHand.hand)
+            setDealerSum(dealerHand.handSum)
+            console.log(dealerHand.hand)
+        }
+    
+        fetchDealerCard()
+        return () => {}
+    }, [])
+    
     const handleStand = () => {
         console.log("stand")
     }
@@ -61,14 +76,15 @@ const BlackJackGame = ({ openModal }) => {
                 <h3 className="mb-4">Dealer's hand:</h3>
                 <div className="card-container mb-4">
                     <h2 id="dealerHand" className="cardHand">
-                        <Card
-                            suit={"♣"}
-                            cardValue={"10"}
-                        />
-                        <Card
-                            suit={"♣"}
-                            cardValue={"10"}
-                        />
+                        {
+                            dealerHand.map((card, index) => (
+                                <Card 
+                                    key={index}
+                                    suit={card.suit}
+                                    cardValue={card.card}
+                                />
+                            ))
+                        }
                     </h2>
                     <h3 id="dealerHandSum" className="hand-sum">{dealerSum}</h3>
                 </div>

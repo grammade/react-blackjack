@@ -37,9 +37,9 @@ router.get("/draw/:sessionId", asyncHandler(async (req, res) => {
     res.status(200).json(new DrawCardDTO(
         cardSuits[deck.indexOf(suit)],
         cardVal,
-        deck[sessionId].cardCount,
-        deck[sessionId].currentHandSum,
-        deck[sessionId].currentDealerHandSum,
+        decks[sessionId].cardCount,
+        decks[sessionId].currentHandSum,
+        decks[sessionId].currentDealerHandSum,
         bustOrBlackJack
     ));
 }));
@@ -58,7 +58,7 @@ router.get("/dealer/draw/:sessionId", (req, res) => {
     if (cardCount < 5)
         return res.status(400).json(
         {   
-            msg: "Penetration lvl reached",
+            msg: "Penetration level reached",
             status: 2
         })
 
@@ -67,14 +67,16 @@ router.get("/dealer/draw/:sessionId", (req, res) => {
     do{
         do suit = deck[Math.floor(Math.random() * deck.length)]
         while (suit.cards.length === 0)
-        cardVal = suit.cards.splice(Math.floor(Math.random() * suit.cards.length), 1)[0]
+        let cardVal = suit.cards.splice(Math.floor(Math.random() * suit.cards.length), 1)[0]
         tempSum += Number.isInteger(cardVal) ? parseInt(cardVal) : handleFace(cardVal, tempSum)
+        decks[sessionId].cardCount--;
         hand.push({
-            suit: suit,
+            suit: cardSuits[deck.indexOf(suit)],
             card: cardVal
         })
     }while(tempSum<17)
     
+    decks[sessionId].currentDealerHandSum = tempSum
     res.status(200).json(new DealerCardDTO(
         hand,
         cardCount,

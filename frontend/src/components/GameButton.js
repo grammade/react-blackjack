@@ -14,19 +14,7 @@ const GameButton = ({
     playerSum,
     setCardWidth,
     openModal }) => {
-    const { currentUser, userLoggedIn, loading, guestUid, signInGoogle, signOut } = useAuth()
-    
-    const manageSession = async (uid) => {
-        let localSess = localStorage.getItem("session")
-        console.log(`local session exists : ${localSess}`)
-        if(!localSess){
-            localSess = (await getSession(uid)).session
-            localStorage.setItem("session", localSess)
-            console.log(`creating new session: ${localSess}`)
-        }
-        
-        return localSess
-    }
+    const { currentUser, userLoggedIn, loading, guestUid, signInGoogle, signOut, manageSession } = useAuth()
 
     const handleHit = async () => {
         let uid = null
