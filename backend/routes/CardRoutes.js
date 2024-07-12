@@ -2,7 +2,7 @@ import express from "express";
 import User from "../models/user.js";
 import UserSession from "../models/userSession.js";
 import asyncHandler from "../utils/AsyncHandler.js";
-import DrawCardDTO from "../dtos/card.js"
+import {DrawCardDTO, DealerCardDTO} from "../dtos/card.js"
 
 const router = express.Router()
 const decks = {}
@@ -62,15 +62,25 @@ router.get("/dealer/draw/:sessionId", (req, res) => {
             status: 2
         })
 
-    let suit, card, hand, tempSum = 0;
+    let suit, tempSum = 0;
+    let hand = []
     do{
         do suit = deck[Math.floor(Math.random() * deck.length)]
         while (suit.cards.length === 0)
         cardVal = suit.cards.splice(Math.floor(Math.random() * suit.cards.length), 1)[0]
         tempSum += Number.isInteger(cardVal) ? parseInt(cardVal) : handleFace(cardVal, tempSum)
+        hand.push({
+            suit: suit,
+            card: cardVal
+        })
     }while(tempSum<17)
     
-    
+    res.status(200).json(new DealerCardDTO(
+        hand,
+        cardCount,
+        tempSum,
+        tempSum > 21 ? "bust" : null
+    ))
 })
 
 router.get("/check", (req, res) => {

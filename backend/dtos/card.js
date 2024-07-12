@@ -10,7 +10,7 @@ class DrawCardDTO{
 }
 
 class DealerCardDTO{
-    constructor(hand, deckCount, handSum, dealerHandSum, state){
+    constructor(hand, deckCount, handSum, state){
         this.hand = hand
         this.deckCount = deckCount
         this.handSum = handSum
@@ -18,4 +18,4 @@ class DealerCardDTO{
     }
 }
 
-export default DrawCardDTO
+export {DrawCardDTO, DealerCardDTO}
