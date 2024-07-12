@@ -47,6 +47,9 @@ router.get("/draw/:sessionId", asyncHandler(async (req, res) => {
 
 router.get("/dealer/draw/:sessionId", (req, res) => {
     const { sessionId } = req.params;
+    if(!sessionId){
+        return res.status(400).json("invalid session")
+    }
 
     if (!decks[sessionId]) {
         console.log(`Initializing new deck with session: ${sessionId}`);
@@ -85,9 +88,38 @@ router.get("/dealer/draw/:sessionId", (req, res) => {
     ))
 })
 
-router.get("/check", (req, res) => {
-    res.status(200).json({ "deck": deck })
-})
+router.post("/stand", asyncHandler(async(req, res) =>{
+    const {sessionId, uid} = req.body
+    if(!sessionId){
+        return res.status(400).json("invalid session")
+    }
+
+    const { deck, currentHandSum, currentDealerHandSum, cardCount } = decks[sessionId];
+    const result = handleState(currentHandSum, currentDealerHandSum)
+    
+    if(uid.startsWith("guest")){
+        return res.status(200).json({
+            state: result
+        })
+    }
+    
+    const user = await User.findOne({uid})
+        .catch((e) => res.status(404).json("user not found"))
+    if(!user)
+        return res.status(404).json("user not found")
+        
+    switch (result) {
+        case "v":
+            user.win++
+            break;
+        case "l":
+            user.loss++
+            break;
+        default:
+            break;
+    }
+    await user.save()
+}))
 
 function handleBJB(sum) {
     if (sum > 21)

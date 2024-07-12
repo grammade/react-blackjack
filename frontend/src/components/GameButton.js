@@ -16,13 +16,21 @@ const GameButton = ({
     openModal,
     fetchDealerCard }) => {
     const { currentUser, userLoggedIn, loading, guestUid, signInGoogle, signOut, manageSession } = useAuth()
-    
+
 
     const handleHit = async () => {
+        if (!gameState) {
+            setBtnStartClass("success")
+            setBtnStartText("HIT")
+            setGameState(true)
+            await fetchDealerCard()
+            return
+        }
+
         let uid = null
-        if(userLoggedIn){
+        if (userLoggedIn) {
             uid = currentUser.uid
-        }else{
+        } else {
             uid = guestUid
         }
         const session = await manageSession(uid)
@@ -31,11 +39,7 @@ const GameButton = ({
         const card = await drawCard(session);
         const newHand = [...playerHand, card]
         const newHandLength = newHand.length;
-        const cardWidth = Math.floor((cardContainer - (newHandLength * 4)) / (newHandLength)); 
-        
-        console.log(`new card: ${JSON.stringify(card)}`)
-        console.log(`oldHand: ${JSON.stringify(playerHand)}`)
-        console.log(`newHand: ${JSON.stringify(newHand)}`)
+        const cardWidth = Math.floor((cardContainer - (newHandLength * 4)) / (newHandLength));
 
         setCardWidth(cardWidth)
         setPlayerHand(newHand)
@@ -46,15 +50,15 @@ const GameButton = ({
         console.log("onStand GameBtn")
     }
 
-    const startGame = async() => {
+    const startGame = () => {
         gameStart = true
         setBtnStartClass("success")
         setBtnStartText("HIT")
         setGameState(true)
-        await fetchDealerCard()
+        fetchDealerCard()
         setHitHandler(() => handleHit)
     }
-    
+
     useEffect(() => {
         setPlayerHand([])
         setPlayerSum("-")
@@ -67,7 +71,7 @@ const GameButton = ({
     return (
         <div className="BtnContainer">
             <div className="CenterButtons">
-                <button onClick={hitHanlder}
+                <button onClick={handleHit}
                     style={{ width: '100px' }}
                     className={`Btn  mx-1 my-1`}>{btnStartText}</button>
                 <button onClick={onStand}

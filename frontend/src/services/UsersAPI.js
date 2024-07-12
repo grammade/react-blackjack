@@ -16,5 +16,19 @@ const getSession = async (uid) => {
         console.log(e)
     }
 }
+const deleteSession = async (session) => {
+    try{
+        const res = await axios.get(`${host}/user/session/${session}`)
+        
+        return {
+            msg: res.data
+        }
+    }catch(e){
+        console.log(e)
+    }
+}
+const checkUser = async(uid, username) => {
+    
+}
 
-export {getSession}
+export {getSession, deleteSession}

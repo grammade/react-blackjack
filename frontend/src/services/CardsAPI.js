@@ -30,4 +30,16 @@ const drawCardDealer = async(sessionId) => {
     }
 }
 
-export {drawCard, drawCardDealer}
+const stand = async(uid, sessionId) =>{
+    try {
+        const res = await axios.post(`${host}/card/stand/`, {
+            sessionId
+        })
+        return res.data
+    } catch (e) {
+        console.error(e)
+        throw e
+    }
+}
+
+export {drawCard, drawCardDealer, stand}
