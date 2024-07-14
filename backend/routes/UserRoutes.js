@@ -30,6 +30,28 @@ router.delete("/session/:session", asyncHandler(async (req, res) => {
     return res.status(200).send("Session deleted");
 }))
 
+router.get("/check", asyncHandler(async (req, res) => {
+    const {uid, username} = req.params
+    const user = await User.findOne({uid, username})
+    if(!user)
+        res.status(404).json("user not found")
+    res.status(200).json(user)
+}))
+
+router.post("/add", asyncHandler(async (req, res) => {
+    const isUserExists = await findUser(req, res);
+    if(isUserExists)
+        return res.json(400).json("user already exists")
+    
+    const {uid, username} = req.body
+    const newUser = new User({
+        uid: uid,
+        username: username
+    })
+    await newUser.save()
+    return res.status(200).json(newUser)
+}))
+
 async function findUser(req, res) {
     const { uid } = req.body
     const user = await User.findOne({ uid })
@@ -38,36 +60,5 @@ async function findUser(req, res) {
         throw Object.assign(new Error('User not found'), { status: 404 });
     return user
 }
-
-router.post("/set", asyncHandler(async (req, res) => {
-    let user = await findUser(req, res);
-    let dto = { ...req.body }
-    if (dto.state === "win")
-        user.win++
-    else
-        user.loss++
-
-    await user.save()
-    return res.status(200).json(user)
-}))
-
-router.post("/", asyncHandler(async (req, res) => {
-    const { uid } = req.body
-    const existingUser = await User.findOne({ uid })
-
-    if (existingUser)
-        return res.status(400).json({ msg: `user ${uid} already exists` })
-
-    const newUser = new User({ uid })
-    await newUser.save()
-    console.log(`user ${uid} is created`)
-
-    return res.status(201).json(newUser)
-}))
-
-router.get("/", asyncHandler(async (req, res) => {
-    const users = await User.find()
-    return res.json(users)
-}))
 
 export default router
