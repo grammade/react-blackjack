@@ -52,6 +52,10 @@ export function AuthProvider({ children }) {
 
         return localSess
     }
+    
+    const getUid = () => {
+        return userLoggedIn ? currentUser.uid : guestUid
+    }
 
     const value = {
         currentUser,
@@ -60,7 +64,8 @@ export function AuthProvider({ children }) {
         guestUid,
         signInGoogle,
         signOut,
-        manageSession
+        manageSession,
+        getUid
     }
 
     return (

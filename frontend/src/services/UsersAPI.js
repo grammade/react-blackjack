@@ -41,9 +41,7 @@ const checkUserSession = async (uid, username) => {
 }
 const addUser = async (uid, username) => {
     try {
-        const res = await axios.post(`${host}/user/add`, {
-            data: { uid, username }
-        })
+        const res = await axios.post(`${host}/user/add`, { uid, username })
         if (res.status !== 200)
             return null
         return res.data

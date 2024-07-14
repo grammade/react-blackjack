@@ -33,8 +33,10 @@ const drawCardDealer = async(sessionId) => {
 const stand = async(uid, sessionId) =>{
     try {
         const res = await axios.post(`${host}/card/stand/`, {
+            uid,
             sessionId
         })
+        console.log(`stand res: ${res.data}`)
         return res.data
     } catch (e) {
         console.error(e)

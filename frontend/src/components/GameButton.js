@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { drawCard } from "../services/CardsAPI";
+import { drawCard, stand } from "../services/CardsAPI";
 import { getSession } from "../services/UsersAPI";
 import { useAuth } from "../context/authContext";
 
@@ -15,7 +15,7 @@ const GameButton = ({
     setCardWidth,
     openModal,
     fetchDealerCard }) => {
-    const { currentUser, userLoggedIn, loading, guestUid, signInGoogle, signOut, manageSession } = useAuth()
+    const { currentUser, userLoggedIn, loading, guestUid, signInGoogle, signOut, manageSession, getUid } = useAuth()
 
 
     const handleHit = async () => {
@@ -27,12 +27,7 @@ const GameButton = ({
             return
         }
 
-        let uid = null
-        if (userLoggedIn) {
-            uid = currentUser.uid
-        } else {
-            uid = guestUid
-        }
+        const uid = getUid()
         const session = await manageSession(uid)
 
         const cardContainer = getContainerSize() - 20
@@ -46,8 +41,13 @@ const GameButton = ({
         setPlayerSum(card.handSum)
     }
 
-    const onStand = () => {
-        console.log("onStand GameBtn")
+    const onStand = async() => {
+        console.log("onStand")
+        const uid = getUid()
+        const session = await manageSession(uid)
+        
+        const result = await stand(uid, session);
+        console.log(result)
     }
 
     const startGame = () => {

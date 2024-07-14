@@ -39,11 +39,14 @@ router.get("/check", asyncHandler(async (req, res) => {
 }))
 
 router.post("/add", asyncHandler(async (req, res) => {
+    const {uid, username} = req.body
+    console.log("checking user")
+    console.log(req.body)
     const isUserExists = await findUser(req, res);
     if(isUserExists)
-        return res.json(400).json("user already exists")
+        return res.status(200).json(isUserExists)
     
-    const {uid, username} = req.body
+    console.log("adding new user")
     const newUser = new User({
         uid: uid,
         username: username
@@ -53,11 +56,13 @@ router.post("/add", asyncHandler(async (req, res) => {
 }))
 
 async function findUser(req, res) {
+    console.log("find user")
     const { uid } = req.body
     const user = await User.findOne({ uid })
 
     if (!user)
-        throw Object.assign(new Error('User not found'), { status: 404 });
+        return null
+    console.log("user exists")
     return user
 }
 

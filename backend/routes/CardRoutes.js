@@ -119,6 +119,7 @@ router.post("/stand", asyncHandler(async(req, res) =>{
             break;
     }
     await user.save()
+    return res.status(200).json(result)
 }))
 
 function handleBJB(sum) {
