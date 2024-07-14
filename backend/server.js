@@ -14,10 +14,10 @@ import { errorHandler } from './utils/ErrorHandler.js';
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use('/', swaggerUi.serve, swaggerUi.setup(swagger_output))
-
 app.use(express.json())
 app.use(cors())
+// app.use('/', swaggerUi.serve, swaggerUi.setup(swagger_output))
+
 morgan.token('mydate', function () {
     return dateFormat(new Date(), 'HH:MM:ss');
 });
