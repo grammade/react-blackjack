@@ -2,7 +2,7 @@ import express from "express";
 import User from "../models/user.js";
 import UserSession from "../models/userSession.js";
 import asyncHandler from "../utils/AsyncHandler.js";
-import {DrawCardDTO, DealerCardDTO} from "../dtos/card.js"
+import { DrawCardDTO, DealerCardDTO } from "../dtos/card.js"
 
 const router = express.Router()
 const decks = {}
@@ -33,13 +33,19 @@ router.get("/draw/:sessionId", asyncHandler(async (req, res) => {
     decks[sessionId].cardCount--;
 
     const bustOrBlackJack = handleBJB(decks[sessionId].currentHandSum);
-    if(!bustOrBlackJack){
-        const user = await User
-        if(bustOrBlackJack === "bj")
-            
+    if (bustOrBlackJack) {
+        const user = await User.findOne({ uid })
+        if (user) {
+            if (bustOrBlackJack === "bj")
+                user.win++
+            else if (bustOrBlackJack === "bu")
+                user.loss++
+
+            await user.save()
+        }
         reset(decks[sessionId])
     }
-    
+
 
     res.status(200).json(new DrawCardDTO(
         cardSuits[deck.indexOf(suit)],
@@ -54,7 +60,7 @@ router.get("/draw/:sessionId", asyncHandler(async (req, res) => {
 
 router.get("/dealer/draw/:sessionId", (req, res) => {
     const { sessionId } = req.params;
-    if(!sessionId){
+    if (!sessionId) {
         return res.status(400).json("invalid session")
     }
 
@@ -67,14 +73,14 @@ router.get("/dealer/draw/:sessionId", (req, res) => {
 
     if (cardCount < 5)
         return res.status(400).json(
-        {   
-            msg: "Penetration level reached",
-            status: 2
-        })
+            {
+                msg: "Penetration level reached",
+                status: 2
+            })
 
     let suit, tempSum = 0;
     let hand = []
-    do{
+    do {
         do suit = deck[Math.floor(Math.random() * deck.length)]
         while (suit.cards.length === 0)
         let cardVal = suit.cards.splice(Math.floor(Math.random() * suit.cards.length), 1)[0]
@@ -84,8 +90,8 @@ router.get("/dealer/draw/:sessionId", (req, res) => {
             suit: cardSuits[deck.indexOf(suit)],
             card: cardVal
         })
-    }while(tempSum<17)
-    
+    } while (tempSum < 17)
+
     decks[sessionId].currentDealerHandSum = tempSum
     res.status(200).json(new DealerCardDTO(
         hand,
@@ -95,27 +101,27 @@ router.get("/dealer/draw/:sessionId", (req, res) => {
     ))
 })
 
-router.post("/stand", asyncHandler(async(req, res) =>{
-    const {sessionId, uid} = req.body
-    if(!sessionId){
+router.post("/stand", asyncHandler(async (req, res) => {
+    const { sessionId, uid } = req.body
+    if (!sessionId) {
         return res.status(400).json("invalid session")
     }
 
     const { deck, currentHandSum, currentDealerHandSum, cardCount } = decks[sessionId];
     const result = handleState(currentHandSum, currentDealerHandSum)
-    
-    if(uid.startsWith("guest")){
+
+    if (uid.startsWith("guest")) {
         reset(decks[sessionId])
         return res.status(200).json({
             state: result
         })
     }
-    
-    const user = await User.findOne({uid})
+
+    const user = await User.findOne({ uid })
         .catch((e) => res.status(404).json("user not found"))
-    if(!user)
+    if (!user)
         return res.status(404).json("user not found")
-        
+
     switch (result) {
         case "v":
             user.win++
@@ -160,7 +166,7 @@ function handleFace(face, sum) {
     return sum + 11 <= 21 ? 11 : 1
 }
 
-function reset(deck){
+function reset(deck) {
     deck.currentHandSum = 0
     deck.currentDealerHandSum = 0
 }

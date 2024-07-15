@@ -31,7 +31,7 @@ const GameButton = ({
         const session = await manageSession(uid)
 
         const cardContainer = getContainerSize() - 20
-        const card = await drawCard(session);
+        const card = await drawCard(uid, session);
         const newHand = [...playerHand, card]
         const newHandLength = newHand.length;
         const cardWidth = Math.floor((cardContainer - (newHandLength * 4)) / (newHandLength));

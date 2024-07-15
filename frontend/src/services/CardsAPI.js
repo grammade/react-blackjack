@@ -4,7 +4,7 @@ const host = process.env.REACT_APP_HOST
 
 const drawCard = async(uid, sessionId) =>{
     try{
-        const res = await axios.get(`${host}/card/draw/${sessionId}`) //add more param to this
+        const res = await axios.get(`${host}/card/draw/${uid, sessionId}`) 
         console.log(res.data)
         return {
             suit: res.data.suit,
