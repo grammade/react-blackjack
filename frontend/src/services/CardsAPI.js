@@ -2,10 +2,11 @@ import axios from "axios"
 
 const host = process.env.REACT_APP_HOST
 
-const drawCard = async(uid, sessionId) =>{
-    try{
-        const res = await axios.get(`${host}/card/draw/${uid, sessionId}`) 
+const drawCard = async (uid, sessionId) => {
+    try {
+        const res = await axios.get(`${host}/card/draw/${uid, sessionId}`)
         console.log(res.data)
+
         return {
             suit: res.data.suit,
             value: res.data.card,
@@ -14,15 +15,15 @@ const drawCard = async(uid, sessionId) =>{
             dealerSum: res.data.dealerHandSum,
             state: res.data.state
         }
-    }catch(e){
+    } catch (e) {
         console.error(e)
         throw e
-    } 
+    }
 }
 
-const resetDeck = async(sessionId) => {
+const resetDeck = async (sessionId) => {
     try {
-        const res = await axios.post(`${host}/card/reset`,{sessionId})
+        const res = await axios.post(`${host}/card/reset/deck`, { sessionId })
         console.log(res.status)
     } catch (e) {
         console.error(e)
@@ -30,7 +31,17 @@ const resetDeck = async(sessionId) => {
     }
 }
 
-const drawCardDealer = async(sessionId) => {
+const resetHand = async (sessionId) => {
+    try {
+        const res = await axios.post(`${host}/card/reset/hand`, { sessionId })
+        console.log(res.status)
+    } catch (e) {
+        console.error(e)
+        throw e
+    }
+}
+
+const drawCardDealer = async (sessionId) => {
     try {
         const res = await axios.get(`${host}/card/dealer/draw/${sessionId}`)
         return res.data
@@ -40,7 +51,7 @@ const drawCardDealer = async(sessionId) => {
     }
 }
 
-const stand = async(uid, sessionId) =>{
+const stand = async (uid, sessionId) => {
     try {
         const res = await axios.post(`${host}/card/stand/`, {
             uid,
@@ -54,5 +65,10 @@ const stand = async(uid, sessionId) =>{
     }
 }
 
-export {drawCard, drawCardDealer, stand,
-    resetDeck}
+export {
+    drawCard,
+    drawCardDealer,
+    stand,
+    resetDeck,
+    resetHand
+}

@@ -5,7 +5,7 @@ import GameButton from "./GameButton";
 import Wl from "./WLRatio";
 import Card from "./Card";
 
-import { drawCard, drawCardDealer } from "../services/CardsAPI";
+import { drawCard, drawCardDealer, resetDeck } from "../services/CardsAPI";
 import { getSession } from "../services/UsersAPI";
 import { useAuth } from "../context/authContext";
 
@@ -32,7 +32,12 @@ const BlackJackGame = ({ openModal }) => {
         }
         console.log("fetching session from dealer hit")
         const session = await manageSession(uid)
-        const dealerHand = await drawCardDealer(session)
+        let dealerHand = await drawCardDealer(session)
+        if(!dealerHand.hand){
+            console.log("penetration level reached, shuffling new deck")
+            await resetDeck(session)
+            dealerHand = await drawCardDealer(session)
+        }
         setDealerHand(dealerHand.hand)
         setDealerSum("?")
     }

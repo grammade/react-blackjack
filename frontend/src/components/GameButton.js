@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { drawCard, stand, resetDeck } from "../services/CardsAPI";
+import { drawCard, stand, resetDeck, resetHand } from "../services/CardsAPI";
 import { getSession } from "../services/UsersAPI";
 import { useAuth } from "../context/authContext";
 
@@ -32,7 +32,11 @@ const GameButton = ({
         const session = await manageSession(uid)
 
         const cardContainer = getContainerSize() - 20
-        const card = await drawCard(uid, session);
+        let card = await drawCard(uid, session);
+        if(card.suit === null){
+            await shuffleDeck(session)
+            card = await drawCard(uid, session)
+        }
         const newHand = [...playerHand, card]
         const newHandLength = newHand.length;
         const cardWidth = Math.floor((cardContainer - (newHandLength * 4)) / (newHandLength));
@@ -43,34 +47,29 @@ const GameButton = ({
         checkState(card)
     }
 
-    const onStand = async() => {
+    const onStand = async () => {
         console.log("onStand")
         const uid = getUid()
         const session = await manageSession(uid)
-        
+
         const result = await stand(uid, session);
         console.log(result)
         setGameState("post")
     }
-    
-    const checkState = (card) =>{
-        if(!card.state)
+
+    const checkState = (card) => {
+        if (!card.state)
             return null
-        
-        if(card.state === "bj"){
+
+        if (card.state === "bj") {
             console.log("blackjack!")
             setGameState("post")
-        }else if (card.state === "bu"){
+        } else if (card.state === "bu") {
             console.log("bust!")
             setGameState("post")
         }
     }
 
-    useEffect(() => {
-        setPlayerHand([])
-        setPlayerSum("-")
-    }, [userLoggedIn])
-    
     const reset = async () => {
         setCardWidth(100)
         setPlayerHand([])
@@ -79,8 +78,18 @@ const GameButton = ({
         resetDealer()
         const uid = getUid()
         const session = await manageSession(uid)
-        await resetDeck(session)
+        await resetHand(session)
     }
+    
+    const shuffleDeck = async (sessionId) =>{
+        console.log("resetting deck")
+        await resetDeck(sessionId)
+    }
+
+    useEffect(() => {
+        setPlayerHand([])
+        setPlayerSum("-")
+    }, [userLoggedIn])
 
     const [btnStartText, setBtnStartText] = useState("START")
     const [btnStartClass, setBtnStartClass] = useState("primary")
@@ -91,17 +100,21 @@ const GameButton = ({
             <div className="CenterButtons">
                 {gameState === "post" ? (
                     <button onClick={reset}
-                        style={{width: '100px'}}
+                        style={{ width: '226px' }}
                         className="Btn mx-1 my-1">
                         gg go next
                     </button>
-                ) : null}
-                <button onClick={handleHit}
-                    style={{ width: '100px' }}
-                    className={`Btn  mx-1 my-1`}>{btnStartText}</button>
-                <button onClick={onStand}
-                    style={{ width: '100px' }}
-                    className={`Btn mx-1 my-1 ${gameState==="game" ? 'disabled' : ''}`}>STAND</button>
+                ) : (
+                    <>
+                        <button onClick={handleHit}
+                            style={{ width: '100px' }}
+                            className={`Btn  mx-1 my-1`}>{btnStartText}</button>
+                        <button onClick={onStand}
+                            style={{ width: '100px' }}
+                            className={`Btn mx-1 my-1 ${gameState === "game" ? 'disabled' : ''}`}>STAND</button>
+                    </>
+                )}
+
             </div>
             <button onClick={openModal}
                 className={`Btn StickRight `}>Leaderboards</button>
