@@ -2,9 +2,9 @@ import axios from "axios"
 
 const host = process.env.REACT_APP_HOST
 
-const drawCard = async(sessionId) =>{
+const drawCard = async(uid, sessionId) =>{
     try{
-        const res = await axios.get(`${host}/card/draw/${sessionId}`)
+        const res = await axios.get(`${host}/card/draw/${sessionId}`) //add more param to this
         console.log(res.data)
         return {
             suit: res.data.suit,

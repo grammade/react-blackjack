@@ -63,6 +63,10 @@ const GameButton = ({
         setPlayerHand([])
         setPlayerSum("-")
     }, [userLoggedIn])
+    
+    const reset = () => {
+        
+    }
 
     const [btnStartText, setBtnStartText] = useState("START")
     const [btnStartClass, setBtnStartClass] = useState("primary")

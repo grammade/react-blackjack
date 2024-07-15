@@ -7,7 +7,7 @@ import {DrawCardDTO, DealerCardDTO} from "../dtos/card.js"
 const router = express.Router()
 const decks = {}
 router.get("/draw/:sessionId", asyncHandler(async (req, res) => {
-    const { sessionId } = req.params;
+    const { uid, sessionId } = req.params; // for this
 
     if (!decks[sessionId]) {
         console.log(`Initializing new deck with session: ${sessionId}`);
@@ -33,6 +33,13 @@ router.get("/draw/:sessionId", asyncHandler(async (req, res) => {
     decks[sessionId].cardCount--;
 
     const bustOrBlackJack = handleBJB(decks[sessionId].currentHandSum);
+    if(!bustOrBlackJack){
+        const user = await User
+        if(bustOrBlackJack === "bj")
+            
+        reset(decks[sessionId])
+    }
+    
 
     res.status(200).json(new DrawCardDTO(
         cardSuits[deck.indexOf(suit)],
@@ -98,6 +105,7 @@ router.post("/stand", asyncHandler(async(req, res) =>{
     const result = handleState(currentHandSum, currentDealerHandSum)
     
     if(uid.startsWith("guest")){
+        reset(decks[sessionId])
         return res.status(200).json({
             state: result
         })
@@ -119,6 +127,7 @@ router.post("/stand", asyncHandler(async(req, res) =>{
             break;
     }
     await user.save()
+    reset(decks[sessionId])
     return res.status(200).json(result)
 }))
 
@@ -149,6 +158,11 @@ function handleFace(face, sum) {
     if (face !== "A")
         return 10
     return sum + 11 <= 21 ? 11 : 1
+}
+
+function reset(deck){
+    deck.currentHandSum = 0
+    deck.currentDealerHandSum = 0
 }
 
 function initDeck(sessionId) {
