@@ -20,6 +20,16 @@ const drawCard = async(uid, sessionId) =>{
     } 
 }
 
+const resetDeck = async(sessionId) => {
+    try {
+        const res = await axios.post(`${host}/card/reset`,{sessionId})
+        console.log(res.status)
+    } catch (e) {
+        console.error(e)
+        throw e
+    }
+}
+
 const drawCardDealer = async(sessionId) => {
     try {
         const res = await axios.get(`${host}/card/dealer/draw/${sessionId}`)
@@ -44,4 +54,5 @@ const stand = async(uid, sessionId) =>{
     }
 }
 
-export {drawCard, drawCardDealer, stand}
+export {drawCard, drawCardDealer, stand,
+    resetDeck}

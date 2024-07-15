@@ -43,7 +43,6 @@ router.get("/draw/:sessionId", asyncHandler(async (req, res) => {
 
             await user.save()
         }
-        reset(decks[sessionId])
     }
 
 
@@ -54,8 +53,15 @@ router.get("/draw/:sessionId", asyncHandler(async (req, res) => {
         decks[sessionId].currentHandSum,
         decks[sessionId].currentDealerHandSum,
         bustOrBlackJack
-    ));
-}));
+    ))
+}))
+
+router.post('/reset', (req, res) => {
+    const {sessionId} = req.body
+    
+    reset(decks[sessionId])
+    return res.status(200)
+})
 
 
 router.get("/dealer/draw/:sessionId", (req, res) => {

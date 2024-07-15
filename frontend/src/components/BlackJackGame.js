@@ -37,6 +37,11 @@ const BlackJackGame = ({ openModal }) => {
         setDealerSum("?")
     }
     
+    const resetDealer = () =>{
+        setDealerHand([])
+        setDealerSum("-")
+    }
+    
     const handleStand = () => {
         console.log("stand")
     }
@@ -113,6 +118,7 @@ const BlackJackGame = ({ openModal }) => {
                     setCardWidth={setCardWidth}
                     openModal={openModal}
                     fetchDealerCard={fetchDealerCard}
+                    resetDealer = {resetDealer}
                 />
             </div>
             <Wl ratio={"0/0"} />
