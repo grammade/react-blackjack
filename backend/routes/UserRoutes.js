@@ -7,6 +7,7 @@ import { v6 as uuidv6 } from "uuid"
 const router = express.Router()
 const generateSession = () => uuidv6()
 
+//generate session
 router.get("/session", asyncHandler(async (req, res) => {
     const { uid } = req.query
     const session = generateSession()
@@ -30,19 +31,12 @@ router.delete("/session/:session", asyncHandler(async (req, res) => {
     return res.status(200).send("Session deleted");
 }))
 
-router.get("/check", asyncHandler(async (req, res) => {
-    const {uid, username} = req.params
-    const user = await User.findOne({uid, username})
-    if(!user)
-        res.status(404).json("user not found")
-    res.status(200).json(user)
-}))
-
+//add user to db if not exists, return one if already exists
 router.post("/add", asyncHandler(async (req, res) => {
     const {uid, username} = req.body
     console.log("checking user")
     console.log(req.body)
-    const isUserExists = await findUser(req, res);
+    const isUserExists = await findUser(uid);
     if(isUserExists)
         return res.status(200).json(isUserExists)
     
@@ -55,9 +49,17 @@ router.post("/add", asyncHandler(async (req, res) => {
     return res.status(200).json(newUser)
 }))
 
-async function findUser(req, res) {
-    console.log("find user")
-    const { uid } = req.body
+router.get("/wl", asyncHandler(async(req, res) =>{
+    const {uid} = req.query
+    console.log(`wl uid: ${uid}`)
+    const isUserExists = await findUser(uid)
+    if(isUserExists)
+        return res.status(200).json(isUserExists)
+    else
+        return res.status(404).send("user not found")
+}))
+
+async function findUser(uid) {
     const user = await User.findOne({ uid })
 
     if (!user)

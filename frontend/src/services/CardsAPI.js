@@ -27,7 +27,6 @@ const drawCard = async (uid, sessionId) => {
 
 const resetDeck = async (sessionId) => {
     try {
-        console.log(`reseting DECK`)
         const res = await axios.post(`${host}/card/reset/deck`, { sessionId })
         console.log(res.status)
     } catch (e) {
@@ -38,7 +37,6 @@ const resetDeck = async (sessionId) => {
 
 const resetHand = async (sessionId) => {
     try {
-        console.log(`reseting HAND`)
         const res = await axios.post(`${host}/card/reset/hand`, { sessionId })
         console.log(res.status)
     } catch (e) {
@@ -63,8 +61,7 @@ const stand = async (uid, sessionId) => {
             uid,
             sessionId
         })
-        console.log(`stand res: ${res.data}`)
-        return res.data
+        return res.data.state
     } catch (e) {
         console.error(e)
         throw e

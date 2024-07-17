@@ -27,18 +27,6 @@ const deleteSession = async (session) => {
         console.log(e)
     }
 }
-const checkUserSession = async (uid, username) => {
-    try {
-        const res = await axios.get(`${host}/user/check`, {
-            params: { uid, username }
-        })
-        if (res.status !== 200)
-            return null
-        return res.data
-    } catch (e) {
-        console.log(e)
-    }
-}
 const addUser = async (uid, username) => {
     try {
         const res = await axios.post(`${host}/user/add`, { uid, username })
@@ -50,9 +38,20 @@ const addUser = async (uid, username) => {
     }
 }
 
+const getWl = async(uid) =>{
+    try {
+        const res = await axios.get(`${host}/user/wl`, {
+            params: {uid}
+        })
+        return res.data
+    } catch (e) {
+        console.log(e)
+    }
+}
+
 export {
     getSession,
     deleteSession,
-    checkUserSession,
-    addUser
+    addUser,
+    getWl
 }

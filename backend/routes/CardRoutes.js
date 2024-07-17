@@ -7,7 +7,7 @@ import { DrawCardDTO, DealerCardDTO } from "../dtos/card.js"
 const router = express.Router()
 const decks = {}
 router.get("/draw/", asyncHandler(async (req, res) => {
-    const { uid, sessionId } = req.query; // for this
+    const { uid, sessionId } = req.query; 
 
     if (!decks[sessionId]) {
         console.log(`Initializing new deck with session: ${sessionId}`);
@@ -194,8 +194,10 @@ function handleFace(face, sum) {
 }
 
 function reset(deck) {
-    deck.currentHandSum = 0
-    deck.currentDealerHandSum = 0
+    if(deck){
+        deck.currentHandSum = 0
+        deck.currentDealerHandSum = 0
+    }
 }
 
 function initDeck(sessionId) {

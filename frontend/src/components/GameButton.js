@@ -1,27 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { drawCard, stand, resetDeck, resetHand } from "../services/CardsAPI";
-import { getSession } from "../services/UsersAPI";
+import { getSession, getWl } from "../services/UsersAPI";
 import { useAuth } from "../context/authContext";
 
 
 const GameButton = ({
     getContainerSize,
-    handleStand,
-    gameStart,
     setPlayerHand,
     setPlayerSum,
     playerHand,
-    playerSum,
     setCardWidth,
     openModal,
     fetchDealerCard,
-    resetDealer }) => {
+    resetDealer,
+    updateWl,
+    endRound}) => {
     const { currentUser, userLoggedIn, loading, guestUid, signInGoogle, signOut, manageSession, getUid } = useAuth()
 
+    const [btnStartText, setBtnStartText] = useState("START")
+    const [gameState, setGameState] = useState("pre")
 
     const handleHit = async () => {
         if (gameState === "pre") {
-            setBtnStartClass("success")
             setBtnStartText("HIT")
             setGameState(true)
             await fetchDealerCard()
@@ -33,7 +33,7 @@ const GameButton = ({
 
         const cardContainer = getContainerSize() - 20
         let card = await drawCard(uid, session);
-        if(card.suit === null){
+        if (card.suit === null) {
             console.log("card is depleted, regening the deck")
             await shuffleDeck(session)
             console.log("deck regened, redrawing")
@@ -51,12 +51,11 @@ const GameButton = ({
     }
 
     const onStand = async () => {
-        console.log("onStand")
         const uid = getUid()
         const session = await manageSession(uid)
 
         const result = await stand(uid, session);
-        console.log(result)
+        endRound(result)
         setGameState("post")
     }
 
@@ -66,38 +65,45 @@ const GameButton = ({
 
         if (card.state === "bj") {
             console.log("blackjack!")
+            endRound("v")
             setGameState("post")
         } else if (card.state === "bu") {
             console.log("bust!")
+            endRound("l")
             setGameState("post")
         }
     }
 
-    const reset = async () => {
+    const reset = async (isLoggingIn) => {
         setCardWidth(100)
         setPlayerHand([])
         setPlayerSum("-")
         setGameState("pre")
         resetDealer()
-        const uid = getUid()
-        const session = await manageSession(uid)
-        await resetHand(session)
+        if (isLoggingIn) {
+            const uid = getUid()
+            const session = await manageSession(uid)
+            await resetHand(session)
+        }
     }
-    
-    const shuffleDeck = async (sessionId) =>{
+
+    const shuffleDeck = async (sessionId) => {
         console.log("resetting deck")
         await resetDeck(sessionId)
     }
 
     useEffect(() => {
-        setPlayerHand([])
-        setPlayerSum("-")
+        const resetHook = async () => {
+            await reset(true)
+        }
+        return () => resetHook()
     }, [userLoggedIn])
-
-    const [btnStartText, setBtnStartText] = useState("START")
-    const [btnStartClass, setBtnStartClass] = useState("primary")
-    const [gameState, setGameState] = useState("pre")
-    const [hitHanlder, setHitHandler] = useState()
+    
+    useEffect(() => {
+        if(gameState === "post"){
+            updateWl()
+        }
+    }, [gameState])
     return (
         <div className="BtnContainer">
             <div className="CenterButtons">

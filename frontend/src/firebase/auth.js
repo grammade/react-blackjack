@@ -5,10 +5,15 @@ import { addUser } from "../services/UsersAPI";
 const signInGoogle = async () => {
     const provider = new GoogleAuthProvider()
     const res = await signInWithPopup(auth, provider)
-        .catch((e) => { console.log(e) })
-    const user = await addUser( //add user if not exists
-        res.user.uid,
-        res.user.displayName)
+        .catch((e) => {
+            console.log(e)
+            return null
+        })
+    if (res) {
+        await addUser( //add user if not exists
+            res.user.uid,
+            res.user.displayName)
+    }
     return res
 }
 

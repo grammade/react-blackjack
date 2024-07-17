@@ -6,18 +6,20 @@ import Wl from "./WLRatio";
 import Card from "./Card";
 
 import { drawCard, drawCardDealer, resetDeck } from "../services/CardsAPI";
-import { getSession } from "../services/UsersAPI";
+import { getSession, getWl } from "../services/UsersAPI";
 import { useAuth } from "../context/authContext";
 
 import "./BlackJack.css"
 
 const BlackJackGame = ({ openModal }) => {
-    const { currentUser, userLoggedIn, loading, guestUid, signInGoogle, signOut, manageSession } = useAuth()
+    const { currentUser, userLoggedIn, loading, guestUid, signInGoogle, signOut, manageSession, getUid } = useAuth()
     const [dealerHand, setDealerHand] = useState([])
     const [playerHand, setPlayerHand] = useState([])
     const [dealerSum, setDealerSum] = useState("-")
     const [playerSum, setPlayerSum] = useState()
     const [wlRatio, setWlRatio] = useState("0/0")
+    const [localWin, setLocalWin] = useState(0)
+    const [localLoss, setLocalLoss] = useState(0)
     const [gameStarted, setGameStarted] = useState(false)
     const [cardWidth, setCardWidth] = useState(100)
     const [containerWidth, setContainerWidth] = useState(0)
@@ -35,7 +37,7 @@ const BlackJackGame = ({ openModal }) => {
         console.log(`session fetched: ${session}`)
         console.log(`drawing dealer card`)
         let dealerHand = await drawCardDealer(session)
-        if(!dealerHand.hand){
+        if (!dealerHand.hand) {
             console.log("penetration level reached, shuffling new deck")
             await resetDeck(session)
             console.log(`drawing dealer card`)
@@ -45,18 +47,39 @@ const BlackJackGame = ({ openModal }) => {
         setDealerHand(dealerHand.hand)
         setDealerSum("?")
     }
-    
-    const resetDealer = () =>{
+
+    const resetDealer = () => {
         setDealerHand([])
         setDealerSum("-")
     }
-    
+
     const handleStand = () => {
         console.log("stand")
     }
 
     const updatePlayerHand = (hand) => {
         setPlayerHand(hand)
+    }
+
+    const updateWlRatio = async () => {
+        console.log('fetching wl')
+        let w, l;
+        if (userLoggedIn) {
+            const user = await getWl(getUid())
+            w = user.win
+            l = user.loss
+        } else {
+            w = localWin
+            l = localLoss
+        }
+        setWlRatio(`${w} / ${l}`)
+    }
+
+    const endRound = (res) => {
+        if (res === "v")
+            setLocalWin(localWin + 1)
+        else
+            setLocalLoss(localLoss + 1)
     }
 
     const getContainerSize = () => containerWidth
@@ -76,6 +99,13 @@ const BlackJackGame = ({ openModal }) => {
             window.removeEventListener("resize", getSize)
         }
     }, [ref])
+    
+    useEffect(() => {
+        updateWlRatio()
+    }, [])
+    useEffect(() => {
+        updateWlRatio()
+    }, [userLoggedIn])
 
     return (
         <div>
@@ -87,10 +117,10 @@ const BlackJackGame = ({ openModal }) => {
                     <h2 id="dealerHand" className="cardHand">
                         {
                             dealerHand.map((card, index) => (
-                                <Card 
+                                <Card
                                     key={index}
-                                    suit={index === dealerHand.length-1 ? "" : card.suit}
-                                    cardValue={index === dealerHand.length-1 ? "" : card.card}
+                                    suit={index === dealerHand.length - 1 ? "" : card.suit}
+                                    cardValue={index === dealerHand.length - 1 ? "" : card.card}
                                     className={index === dealerHand.length - 1 ? 'face-down' : ''}
                                 />
                             ))
@@ -118,19 +148,18 @@ const BlackJackGame = ({ openModal }) => {
                 </div>
                 <GameButton
                     getContainerSize={getContainerSize}
-                    handleStand={handleStand}
-                    gameStart={gameStarted}
                     setPlayerHand={updatePlayerHand}
                     setPlayerSum={setPlayerSum}
                     playerHand={playerHand}
-                    playerSum={playerSum}
                     setCardWidth={setCardWidth}
                     openModal={openModal}
                     fetchDealerCard={fetchDealerCard}
-                    resetDealer = {resetDealer}
+                    resetDealer={resetDealer}
+                    updateWl={updateWlRatio}
+                    endRound={endRound}
                 />
             </div>
-            <Wl ratio={"0/0"} />
+            <Wl ratio={wlRatio} />
         </div>
     );
 }
