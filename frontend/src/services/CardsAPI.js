@@ -4,7 +4,11 @@ const host = process.env.REACT_APP_HOST
 
 const drawCard = async (uid, sessionId) => {
     try {
-        const res = await axios.get(`${host}/card/draw/${uid, sessionId}`)
+        const res = await axios.get(`${host}/card/draw/`, {
+            params:{
+                uid, sessionId
+            }
+        })
         console.log(res.data)
 
         return {
@@ -23,6 +27,7 @@ const drawCard = async (uid, sessionId) => {
 
 const resetDeck = async (sessionId) => {
     try {
+        console.log(`reseting DECK`)
         const res = await axios.post(`${host}/card/reset/deck`, { sessionId })
         console.log(res.status)
     } catch (e) {
@@ -33,6 +38,7 @@ const resetDeck = async (sessionId) => {
 
 const resetHand = async (sessionId) => {
     try {
+        console.log(`reseting HAND`)
         const res = await axios.post(`${host}/card/reset/hand`, { sessionId })
         console.log(res.status)
     } catch (e) {

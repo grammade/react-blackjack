@@ -32,12 +32,16 @@ const BlackJackGame = ({ openModal }) => {
         }
         console.log("fetching session from dealer hit")
         const session = await manageSession(uid)
+        console.log(`session fetched: ${session}`)
+        console.log(`drawing dealer card`)
         let dealerHand = await drawCardDealer(session)
         if(!dealerHand.hand){
             console.log("penetration level reached, shuffling new deck")
             await resetDeck(session)
+            console.log(`drawing dealer card`)
             dealerHand = await drawCardDealer(session)
         }
+        console.log(`dealer card drawn`)
         setDealerHand(dealerHand.hand)
         setDealerSum("?")
     }

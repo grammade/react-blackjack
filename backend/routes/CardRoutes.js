@@ -6,8 +6,8 @@ import { DrawCardDTO, DealerCardDTO } from "../dtos/card.js"
 
 const router = express.Router()
 const decks = {}
-router.get("/draw/:sessionId", asyncHandler(async (req, res) => {
-    const { uid, sessionId } = req.params; // for this
+router.get("/draw/", asyncHandler(async (req, res) => {
+    const { uid, sessionId } = req.query; // for this
 
     if (!decks[sessionId]) {
         console.log(`Initializing new deck with session: ${sessionId}`);
@@ -66,13 +66,15 @@ router.get("/draw/:sessionId", asyncHandler(async (req, res) => {
 
 router.post('/reset/hand', (req, res) => {
     const { sessionId } = req.body
-
+    console.log(`reseting hand for ${sessionId}`)
     reset(decks[sessionId])
-    return res.status(200)
+    console.log(`hand reset`)
+    return res.status(200).json({msg: "hand reset"})
 })
 
 router.post('/reset/deck', (req, res) => {
     const { sessionId } = req.body
+    console.log(`reseting deck for ${sessionId}`)
 
     decks[sessionId].deck = initCards()
     decks[sessionId].cardCount = 54

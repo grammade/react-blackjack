@@ -34,9 +34,12 @@ const GameButton = ({
         const cardContainer = getContainerSize() - 20
         let card = await drawCard(uid, session);
         if(card.suit === null){
+            console.log("card is depleted, regening the deck")
             await shuffleDeck(session)
+            console.log("deck regened, redrawing")
             card = await drawCard(uid, session)
         }
+        console.log("adding new card to hand")
         const newHand = [...playerHand, card]
         const newHandLength = newHand.length;
         const cardWidth = Math.floor((cardContainer - (newHandLength * 4)) / (newHandLength));

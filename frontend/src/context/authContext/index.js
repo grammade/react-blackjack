@@ -44,12 +44,12 @@ export function AuthProvider({ children }) {
     const manageSession = async (uid) => {
         let localSess = localStorage.getItem("session")
         console.log(`local session for uid ${uid} : ${localSess}`)
-        if (!localSess) {
+        if (localSess === null) {
+            console.log(`creating new session`)
             localSess = (await getSession(uid)).session
             localStorage.setItem("session", localSess)
-            console.log(`creating new session: ${localSess}`)
+            console.log(`new session: ${localSess}`)
         }
-
         return localSess
     }
     
