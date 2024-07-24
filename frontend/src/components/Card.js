@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 
-const Card = ({ suit, cardValue, className, width, animation }) => {
+const Card = ({ suit, cardValue, className, width, style, suitStyle  }) => {
 
     return (
-        <div className={`card ${className}`} style={{ width: width}}>
-            <div className="suit" data-suit={suit}>
+        <div className={`card ${className}`} style={{ width: width, ...style}}>
+            <div className="suit" style={{...suitStyle}}>
                 {suit}
             </div>
             <div className="cardValue">

@@ -153,30 +153,13 @@ body {
 
 .card.fade-in {
   animation: fadeInFromRight 0.5s ease-out;
+  animation-fill-mode: both;
 }
 
-.card.move-left {
-  animation: moveLeft 0.5s ease-out;
+.card.last {
+  animation: fadeIn 0.5s ease-out;
+  animation-fill-mode: both;
 }
-
-.card.face-down {
-  opacity: 0.7;
-  mix-blend-mode: normal;
-  background-color: black;
-}
-
-.card.face-down::before {
-  content: "";
-  background-color: black;
-  /* A different color for card back design */
-  width: 80%;
-  height: 80%;
-  position: absolute;
-  top: 10%;
-  left: 10%;
-  border-radius: 5px;
-}
-
 @keyframes fadeInFromRight {
   0% {
     transform: translateX(100%);
@@ -188,15 +171,12 @@ body {
     opacity: 1;
   }
 }
-
-@keyframes moveLeft {
-  0% {
-    transform: translateX(50px);
+@keyframes fadeIn {
+  0%{
+    opacity: 0;
   }
-
-  100% {
-    transform: translateX(0);
-    /* Adjust the value as needed */
+  100%{
+    opacity: 1;
   }
 }
 

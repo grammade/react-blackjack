@@ -26,12 +26,7 @@ const BlackJackGame = ({ openModal }) => {
     const ref = useRef(null)
 
     const fetchDealerCard = async () => {
-        let uid = null
-        if (userLoggedIn) {
-            uid = currentUser.uid
-        } else {
-            uid = guestUid
-        }
+        let uid = userLoggedIn ? currentUser.uid : guestUid
         console.log("fetching session from dealer hit")
         const session = await manageSession(uid)
         console.log(`session fetched: ${session}`)
@@ -83,16 +78,15 @@ const BlackJackGame = ({ openModal }) => {
                 setLocalLoss(localLoss + 1)
         }
         
-        let uid = null
-        if (userLoggedIn) {
-            uid = currentUser.uid
-        } else {
-            uid = guestUid
-        }
+        let uid = userLoggedIn ? currentUser.uid : guestUid
         console.log("fetching session from hole card")
         const session = await manageSession(uid)
-        const hole = await drawHoleCardDealer(session)
-        console.log("holeCard", hole)
+        const dealer = await drawHoleCardDealer(session)
+        console.log("holeCard", dealer)
+        
+        //reveal dealer cards
+        setDealerHand(dealer.hand)
+        setDealerSum(dealer.handSum)
     }
 
     const getContainerSize = () => containerWidth
@@ -132,8 +126,10 @@ const BlackJackGame = ({ openModal }) => {
                             dealerHand.map((card, index) => (
                                 <Card
                                     key={index}
-                                    suit={index === dealerHand.length - 1 ? "" : card.suit}
-                                    cardValue={index === dealerHand.length - 1 ? "" : card.card}
+                                    suit={card.suit}
+                                    cardValue={card.card}
+                                    className={index === dealerHand.length-1 && card.suit != null ? "last" : "fade-in"}
+                                    style={index !== dealerHand.length-1 || card.suit === null ? { animationDelay: `${index * 0.3}s` } : {}}
                                 />
                             ))
                         }
