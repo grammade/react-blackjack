@@ -29,18 +29,16 @@ router.get("/draw/", asyncHandler(async (req, res) => {
     }
 
     let suit, cardVal;
-    console.log("randomizing suit")
     do suit = deck[Math.floor(Math.random() * deck.length)];
     while (suit.cards.length === 0);
 
-    console.log("randomiding card val")
     cardVal = suit.cards.splice(Math.floor(Math.random() * suit.cards.length), 1)[0];
     decks[sessionId].currentHandSum += Number.isInteger(cardVal) ? parseInt(cardVal) : handleFace(cardVal, currentHandSum);
     decks[sessionId].cardCount--;
     
-    console.log("handling bust blackjack")
     const bustOrBlackJack = handleBJB(decks[sessionId].currentHandSum);
     if (bustOrBlackJack) {
+        decks[sessionId].state = "end"
         const user = await User.findOne({ uid })
         if (user) {
             if (bustOrBlackJack === "bj")
@@ -52,14 +50,12 @@ router.get("/draw/", asyncHandler(async (req, res) => {
         }
     }
 
-    console.log("returning api")
-
     res.status(200).json(new DrawCardDTO(
         cardSuits[deck.indexOf(suit)],
         cardVal,
         decks[sessionId].cardCount,
         decks[sessionId].currentHandSum,
-        decks[sessionId].currentDealerHandSum,
+        "?",
         bustOrBlackJack
     ))
 }))
@@ -78,6 +74,7 @@ router.post('/reset/deck', (req, res) => {
 
     decks[sessionId].deck = initCards()
     decks[sessionId].cardCount = 54
+    decks[sessionId].state = "game"
     return res.status(200).json(decks[sessionId])
 })
 
@@ -116,15 +113,34 @@ router.get("/dealer/draw/:sessionId", (req, res) => {
             card: cardVal
         })
     } while (tempSum < 17)
-
+    
     decks[sessionId].currentDealerHandSum = tempSum
+    decks[sessionId].dealerHand = hand.map(card => ({...card}))
+    hand[hand.length - 1].suit = null
+    hand[hand.length - 1].card = null
     res.status(200).json(new DealerCardDTO(
         hand,
-        cardCount,
-        tempSum,
-        tempSum > 21 ? "bust" : null
+        cardCount
     ))
 })
+
+router.get("/dealer/hole/:sessionId", asyncHandler(async(req, res) => {
+    const {sessionId} = req.params
+    const { dealerHand, currentDealerHandSum, cardCount, state } = decks[sessionId];
+    if(!dealerHand)
+        return res.status(404).send("deck not found")
+    
+    if(state !== "end")
+        return res.status(403).send("forbiden")
+    
+    reset(decks[sessionId])
+    return res.status(200).json(new DealerCardDTO(
+        dealerHand,
+        cardCount,
+        currentDealerHandSum,
+        currentDealerHandSum > 21 ? "bust" : null
+    ))
+}))
 
 router.post("/stand", asyncHandler(async (req, res) => {
     const { sessionId, uid } = req.body
@@ -134,9 +150,8 @@ router.post("/stand", asyncHandler(async (req, res) => {
 
     const { deck, currentHandSum, currentDealerHandSum, cardCount } = decks[sessionId];
     const result = handleState(currentHandSum, currentDealerHandSum)
-
+    decks[sessionId].state = "end"
     if (uid.startsWith("guest")) {
-        reset(decks[sessionId])
         return res.status(200).json({
             state: result
         })
@@ -158,9 +173,6 @@ router.post("/stand", asyncHandler(async (req, res) => {
             break;
     }
     await user.save()
-    reset(decks[sessionId])
-    deck.currentHandSum = 0
-    deck.currentDealerHandSum = 0
     return res.status(200).json(result)
 }))
 
@@ -203,9 +215,11 @@ function reset(deck) {
 function initDeck(sessionId) {
     decks[sessionId] = {
         deck: initCards(),
+        dealerHand: [],
         cardCount: 54,
         currentHandSum: 0,
-        currentDealerHandSum: 0
+        currentDealerHandSum: 0,
+        state: "game"
     }
 }
 function initCards() {

@@ -47,13 +47,16 @@ body {
 }
 
 .CenterButtons {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    position: absolute; /* Position absolute within the container */
-    left: 50%; /* Center horizontally */
-    transform: translateX(-50%); /* Center horizontally */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  position: absolute;
+  /* Position absolute within the container */
+  left: 50%;
+  /* Center horizontally */
+  transform: translateX(-50%);
+  /* Center horizontally */
 }
 
 .Btn {
@@ -63,20 +66,24 @@ body {
   border-color: transparent;
   border-radius: 5px;
   text-align: center;
-  padding-top: 5px; padding-bottom: 5px;
-  padding-left: 10px; padding-right: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
-.StickRight{
+.StickRight {
   margin-left: auto;
 }
 
 .Btn:hover {
-    background-color: rgba(0, 0, 0, 0.7); /* Slightly darker on hover */
+  background-color: rgba(0, 0, 0, 0.7);
+  /* Slightly darker on hover */
 }
 
 .Btn:active {
-    background-color: rgba(0, 0, 0, 0.9); /* Even darker when clicked */
+  background-color: rgba(0, 0, 0, 0.9);
+  /* Even darker when clicked */
 }
 
 .wl-ratio-container {
@@ -123,30 +130,24 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* Center align items horizontally */
   justify-content: space-between;
   border: 1px solid #000;
-  /* Add a border for better visualization */
   padding: 0px;
-  /* Add padding inside the card */
   width: 100px;
-  /* Set a fixed width */
   height: 150px;
-  /* Set a fixed height */
   background-color: black;
-  /* Background color for the card */
   border-radius: 10px;
-  /* Rounded corners */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  /* Subtle shadow for 3D effect */
   position: relative;
   overflow: hidden;
   color: white;
-  /* Color for the card value */
   mix-blend-mode: soft-light;
-  flex: 0 1 auto; /* Allow flexible width, not shrinking beyond content size */
-  max-width: 100px; /* Limit maximum width */
-  min-width: 30px; /* Limit minimum width */
+  flex: 0 1 auto;
+  /* Allow flexible width, not shrinking beyond content size */
+  max-width: 100px;
+  /* Limit maximum width */
+  min-width: 30px;
+  /* Limit minimum width */
   transition: width 0.5s ease-out;
 }
 
@@ -161,12 +162,13 @@ body {
 .card.face-down {
   opacity: 0.7;
   mix-blend-mode: normal;
-  background-color: black ;
+  background-color: black;
 }
 
 .card.face-down::before {
   content: "";
-  background-color: black; /* A different color for card back design */
+  background-color: black;
+  /* A different color for card back design */
   width: 80%;
   height: 80%;
   position: absolute;
@@ -189,7 +191,7 @@ body {
 
 @keyframes moveLeft {
   0% {
-    transform: translateX(50px); 
+    transform: translateX(50px);
   }
 
   100% {

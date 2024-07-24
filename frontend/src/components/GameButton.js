@@ -53,7 +53,6 @@ const GameButton = ({
     const onStand = async () => {
         const uid = getUid()
         const session = await manageSession(uid)
-
         const result = await stand(uid, session);
         endRound(result)
         setGameState("post")
@@ -101,6 +100,7 @@ const GameButton = ({
     
     useEffect(() => {
         if(gameState === "post"){
+            setBtnStartText("START")
             updateWl()
         }
     }, [gameState])

@@ -5,7 +5,7 @@ import GameButton from "./GameButton";
 import Wl from "./WLRatio";
 import Card from "./Card";
 
-import { drawCard, drawCardDealer, resetDeck } from "../services/CardsAPI";
+import { drawHoleCardDealer, drawCardDealer, resetDeck } from "../services/CardsAPI";
 import { getSession, getWl } from "../services/UsersAPI";
 import { useAuth } from "../context/authContext";
 
@@ -75,11 +75,24 @@ const BlackJackGame = ({ openModal }) => {
         setWlRatio(`${w} / ${l}`)
     }
 
-    const endRound = (res) => {
-        if (res === "v")
-            setLocalWin(localWin + 1)
-        else
-            setLocalLoss(localLoss + 1)
+    const endRound = async (res) => {
+        if (!userLoggedIn) {
+            if (res === "v")
+                setLocalWin(localWin + 1)
+            else
+                setLocalLoss(localLoss + 1)
+        }
+        
+        let uid = null
+        if (userLoggedIn) {
+            uid = currentUser.uid
+        } else {
+            uid = guestUid
+        }
+        console.log("fetching session from hole card")
+        const session = await manageSession(uid)
+        const hole = await drawHoleCardDealer(session)
+        console.log("holeCard", hole)
     }
 
     const getContainerSize = () => containerWidth
@@ -99,7 +112,7 @@ const BlackJackGame = ({ openModal }) => {
             window.removeEventListener("resize", getSize)
         }
     }, [ref])
-    
+
     useEffect(() => {
         updateWlRatio()
     }, [])
@@ -121,7 +134,6 @@ const BlackJackGame = ({ openModal }) => {
                                     key={index}
                                     suit={index === dealerHand.length - 1 ? "" : card.suit}
                                     cardValue={index === dealerHand.length - 1 ? "" : card.card}
-                                    className={index === dealerHand.length - 1 ? 'face-down' : ''}
                                 />
                             ))
                         }

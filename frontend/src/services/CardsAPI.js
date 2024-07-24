@@ -55,6 +55,16 @@ const drawCardDealer = async (sessionId) => {
     }
 }
 
+const drawHoleCardDealer = async (sessionId) => {
+    try {
+        const res = await axios.get(`${host}/card/dealer/hole/${sessionId}`)
+        return res.data
+    } catch (e) {
+        console.error(e)
+        throw e
+    }
+}
+
 const stand = async (uid, sessionId) => {
     try {
         const res = await axios.post(`${host}/card/stand/`, {
@@ -73,5 +83,6 @@ export {
     drawCardDealer,
     stand,
     resetDeck,
-    resetHand
+    resetHand,
+    drawHoleCardDealer
 }
