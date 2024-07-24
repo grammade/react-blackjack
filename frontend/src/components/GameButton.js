@@ -78,6 +78,7 @@ const GameButton = ({
         setPlayerHand([])
         setPlayerSum("-")
         setGameState("pre")
+        //add some exit animation for the cards
         resetDealer()
         if (isLoggingIn) {
             const uid = getUid()
