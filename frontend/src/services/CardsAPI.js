@@ -71,7 +71,7 @@ const stand = async (uid, sessionId) => {
             uid,
             sessionId
         })
-        return res.data.state
+        return res.data
     } catch (e) {
         console.error(e)
         throw e

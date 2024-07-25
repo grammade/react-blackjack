@@ -19,6 +19,7 @@ const GameButton = ({
     const { currentUser, userLoggedIn, loading, guestUid, signInGoogle, signOut, manageSession, getUid } = useAuth()
 
     const [btnStartText, setBtnStartText] = useState("START")
+    const [btnEndText, setBtnEndText] = useState("gg")
     const [gameState, setGameState] = useState("pre")
     const gameStateWrap = (state) => {
         setGameState(state)
@@ -59,6 +60,13 @@ const GameButton = ({
         const uid = getUid()
         const session = await manageSession(uid)
         const result = await stand(uid, session);
+        console.log("round result", result)
+        if(result === "v")
+            setBtnEndText("Round won")
+        else if(result === "l")
+            setBtnEndText("Round lost")
+        else if(result === "d")
+            setBtnEndText("Draw")
         endRound(result)
         gameStateWrap("post")
     }
@@ -69,10 +77,12 @@ const GameButton = ({
 
         if (card.state === "bj") {
             console.log("blackjack!")
+            setBtnEndText("Blackjack!")
             endRound("v")
             gameStateWrap("post")
         } else if (card.state === "bu") {
             console.log("bust!")
+            setBtnEndText("Bust!")
             endRound("l")
             gameStateWrap("post")
         }
@@ -96,7 +106,7 @@ const GameButton = ({
     }
 
     const shuffleDeck = async (sessionId) => {
-        console.log("resetting deck")
+        console.log("reseting deck")
         await resetDeck(sessionId)
     }
 
@@ -120,7 +130,7 @@ const GameButton = ({
                     <button onClick={reset}
                         style={{ width: '226px' }}
                         className="Btn mx-1 my-1">
-                        gg go next
+                        {btnEndText}
                     </button>
                 ) : (
                     <>
