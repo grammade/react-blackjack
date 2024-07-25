@@ -20,9 +20,11 @@ const BlackJackGame = ({ openModal }) => {
     const [wlRatio, setWlRatio] = useState("0/0")
     const [localWin, setLocalWin] = useState(0)
     const [localLoss, setLocalLoss] = useState(0)
-    const [gameStarted, setGameStarted] = useState(false)
+    const [gameState, setGameState] = useState()
     const [cardWidth, setCardWidth] = useState(100)
     const [containerWidth, setContainerWidth] = useState(0)
+    const [dealerCardClasses, setDealerCardClasses] = useState([])
+    const [dealerPlayerClasses, setPlayerCardClasses] = useState([])
     const ref = useRef(null)
 
     const fetchDealerCard = async () => {
@@ -77,16 +79,39 @@ const BlackJackGame = ({ openModal }) => {
             else
                 setLocalLoss(localLoss + 1)
         }
-        
+
         let uid = userLoggedIn ? currentUser.uid : guestUid
         console.log("fetching session from hole card")
         const session = await manageSession(uid)
         const dealer = await drawHoleCardDealer(session)
         console.log("holeCard", dealer)
-        
+
         //reveal dealer cards
         setDealerHand(dealer.hand)
         setDealerSum(dealer.handSum)
+    }
+
+    const getDealerClassName = (index, dealerHand) => {
+        if (index === dealerHand.length - 1 && dealerHand[index].suit != null) {
+            return "last"
+        } else {
+            return "fade-in";
+        }
+    }
+    const getPlayerClassName = (index) => {
+        if (index === playerHand.length - 1) {
+            return "fade-in"
+        } else {
+            return ""
+        }
+    }
+
+    const getStyle = (index, dealerHand) => {
+        if ((index !== dealerHand.length - 1 || dealerHand[index].suit === null) && gameState !== "pre") {
+            return { animationDelay: `${index * 0.1}s` }
+        } else {
+            return {};
+        }
     }
 
     const getContainerSize = () => containerWidth
@@ -106,14 +131,20 @@ const BlackJackGame = ({ openModal }) => {
             window.removeEventListener("resize", getSize)
         }
     }, [ref])
-
     useEffect(() => {
         updateWlRatio()
     }, [])
     useEffect(() => {
         updateWlRatio()
     }, [userLoggedIn])
-
+    useEffect(() => {
+        setDealerCardClasses(dealerHand.map((card, index) => getDealerClassName(index, dealerHand)));
+    }, [dealerHand])
+    useEffect(() => {
+        if (gameState === "pre") {
+            setDealerCardClasses(dealerHand.map(() => "fade-out"))
+        }
+    }, [gameState, dealerHand, playerHand])
     return (
         <div>
             <Header />
@@ -128,8 +159,8 @@ const BlackJackGame = ({ openModal }) => {
                                     key={index}
                                     suit={card.suit}
                                     cardValue={card.card}
-                                    className={index === dealerHand.length-1 && card.suit != null ? "last" : "fade-in"}
-                                    style={index !== dealerHand.length-1 || card.suit === null ? { animationDelay: `${index * 0.3}s` } : {}}
+                                    className={dealerCardClasses[index]}
+                                    style={getStyle(index, dealerHand)}
                                 />
                             ))
                         }
@@ -146,7 +177,7 @@ const BlackJackGame = ({ openModal }) => {
                                     key={index}
                                     suit={card.suit}
                                     cardValue={card.value}
-                                    className={index === playerHand.length - 1 ? 'fade-in' : ''}
+                                    className={getPlayerClassName(index)}
                                     width={cardWidth}
                                 />
                             ))
@@ -165,6 +196,7 @@ const BlackJackGame = ({ openModal }) => {
                     resetDealer={resetDealer}
                     updateWl={updateWlRatio}
                     endRound={endRound}
+                    gameStateParent={setGameState}
                 />
             </div>
             <Wl ratio={wlRatio} />

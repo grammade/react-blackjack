@@ -28,7 +28,7 @@ function App() {
     <div className="App">
       <AuthProvider>
         <Register show={isModalOpen} closeModal={closeModal} animationClass={animationClass} />
-      <BlackJackGame openModal={openModal} />
+        <BlackJackGame openModal={openModal} />
       </AuthProvider>
     </div>
   );

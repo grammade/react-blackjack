@@ -14,16 +14,21 @@ const GameButton = ({
     fetchDealerCard,
     resetDealer,
     updateWl,
-    endRound}) => {
+    endRound,
+    gameStateParent }) => {
     const { currentUser, userLoggedIn, loading, guestUid, signInGoogle, signOut, manageSession, getUid } = useAuth()
 
     const [btnStartText, setBtnStartText] = useState("START")
     const [gameState, setGameState] = useState("pre")
+    const gameStateWrap = (state) => {
+        setGameState(state)
+        gameStateParent(state)
+    }
 
     const handleHit = async () => {
         if (gameState === "pre") {
             setBtnStartText("HIT")
-            setGameState(true)
+            gameStateWrap("game")
             await fetchDealerCard()
             return
         }
@@ -55,7 +60,7 @@ const GameButton = ({
         const session = await manageSession(uid)
         const result = await stand(uid, session);
         endRound(result)
-        setGameState("post")
+        gameStateWrap("post")
     }
 
     const checkState = (card) => {
@@ -65,26 +70,29 @@ const GameButton = ({
         if (card.state === "bj") {
             console.log("blackjack!")
             endRound("v")
-            setGameState("post")
+            gameStateWrap("post")
         } else if (card.state === "bu") {
             console.log("bust!")
             endRound("l")
-            setGameState("post")
+            gameStateWrap("post")
         }
     }
 
     const reset = async (isLoggingIn) => {
-        setCardWidth(100)
-        setPlayerHand([])
-        setPlayerSum("-")
-        setGameState("pre")
+        gameStateWrap("pre")
         //add some exit animation for the cards
-        resetDealer()
+        const timer = setTimeout(() => {
+            resetDealer()
+            setCardWidth(100)
+            setPlayerHand([])
+            setPlayerSum("-")
+        }, 250)
         if (isLoggingIn) {
             const uid = getUid()
             const session = await manageSession(uid)
             await resetHand(session)
         }
+        return () => clearTimeout(timer)
     }
 
     const shuffleDeck = async (sessionId) => {
@@ -98,9 +106,9 @@ const GameButton = ({
         }
         return () => resetHook()
     }, [userLoggedIn])
-    
+
     useEffect(() => {
-        if(gameState === "post"){
+        if (gameState === "post") {
             setBtnStartText("START")
             updateWl()
         }

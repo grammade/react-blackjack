@@ -160,6 +160,10 @@ body {
   animation: fadeIn 0.5s ease-out;
   animation-fill-mode: both;
 }
+.card.fade-out{
+  animation: fadeOut 0.1s ease-out;
+  animation-fill-mode: forwards;
+}
 @keyframes fadeInFromRight {
   0% {
     transform: translateX(100%);
@@ -177,6 +181,14 @@ body {
   }
   100%{
     opacity: 1;
+  }
+}
+@keyframes fadeOut {
+  0%{
+    opacity: initial;
+  }
+  100%{
+    opacity: 0;
   }
 }
 
