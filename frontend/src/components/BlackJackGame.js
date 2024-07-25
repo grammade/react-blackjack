@@ -24,7 +24,7 @@ const BlackJackGame = ({ openModal }) => {
     const [cardWidth, setCardWidth] = useState(100)
     const [containerWidth, setContainerWidth] = useState(0)
     const [dealerCardClasses, setDealerCardClasses] = useState([])
-    const [dealerPlayerClasses, setPlayerCardClasses] = useState([])
+    const [playerCardClasses, setPlayerCardClasses] = useState([])
     const ref = useRef(null)
 
     const fetchDealerCard = async () => {
@@ -98,7 +98,7 @@ const BlackJackGame = ({ openModal }) => {
             return "fade-in";
         }
     }
-    const getPlayerClassName = (index) => {
+    const getPlayerClassName = (index, playerHand) => {
         if (index === playerHand.length - 1) {
             return "fade-in"
         } else {
@@ -141,8 +141,12 @@ const BlackJackGame = ({ openModal }) => {
         setDealerCardClasses(dealerHand.map((card, index) => getDealerClassName(index, dealerHand)));
     }, [dealerHand])
     useEffect(() => {
+        setPlayerCardClasses(playerHand.map((card, index) => getPlayerClassName(index, playerHand)));
+    }, [playerHand])
+    useEffect(() => {
         if (gameState === "pre") {
             setDealerCardClasses(dealerHand.map(() => "fade-out"))
+            setPlayerCardClasses(playerHand.map(() => "fade-out"))
         }
     }, [gameState, dealerHand, playerHand])
     return (
@@ -177,7 +181,7 @@ const BlackJackGame = ({ openModal }) => {
                                     key={index}
                                     suit={card.suit}
                                     cardValue={card.value}
-                                    className={getPlayerClassName(index)}
+                                    className={playerCardClasses[index]}
                                     width={cardWidth}
                                 />
                             ))
