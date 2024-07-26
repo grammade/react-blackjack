@@ -153,7 +153,7 @@ router.post("/stand", asyncHandler(async (req, res) => {
     decks[sessionId].state = "end"
     if (uid.startsWith("guest")) {
         return res.status(200).json({
-            state: result
+            result
         })
     }
 
