@@ -50,10 +50,6 @@ const BlackJackGame = ({ openModal }) => {
         setDealerSum("-")
     }
 
-    const handleStand = () => {
-        console.log("stand")
-    }
-
     const updatePlayerHand = (hand) => {
         setPlayerHand(hand)
     }
@@ -63,8 +59,8 @@ const BlackJackGame = ({ openModal }) => {
         let w, l;
         if (userLoggedIn) {
             const user = await getWl(getUid())
-            w = user.win
-            l = user.loss
+            w = user ? user.win : 0
+            l = user ? user.loss : 0
         } else {
             w = localWin
             l = localLoss

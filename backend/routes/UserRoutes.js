@@ -43,7 +43,9 @@ router.post("/add", asyncHandler(async (req, res) => {
     console.log("adding new user")
     const newUser = new User({
         uid: uid,
-        username: username
+        username: username,
+        win: 0,
+        loss: 0
     })
     await newUser.save()
     return res.status(200).json(newUser)
@@ -51,7 +53,6 @@ router.post("/add", asyncHandler(async (req, res) => {
 
 router.get("/wl", asyncHandler(async(req, res) =>{
     const {uid} = req.query
-    console.log(`wl uid: ${uid}`)
     const isUserExists = await findUser(uid)
     if(isUserExists)
         return res.status(200).json(isUserExists)
