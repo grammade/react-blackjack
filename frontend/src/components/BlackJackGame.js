@@ -50,10 +50,6 @@ const BlackJackGame = ({ openModal }) => {
         setDealerSum("-")
     }
 
-    const handleStand = () => {
-        console.log("stand")
-    }
-
     const updatePlayerHand = (hand) => {
         setPlayerHand(hand)
     }

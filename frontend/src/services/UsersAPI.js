@@ -38,10 +38,10 @@ const addUser = async (uid, username) => {
     }
 }
 
-const getWl = async(uid) =>{
+const getWl = async (uid) => {
     try {
         const res = await axios.get(`${host}/user/wl`, {
-            params: {uid}
+            params: { uid }
         })
         return res.data
     } catch (e) {

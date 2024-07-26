@@ -7,6 +7,7 @@ import swaggerUi from 'swagger-ui-express';
 import connectDb from "./config/db.js"
 import userRoute from "./routes/UserRoutes.js"
 import cardRoute from "./routes/CardRoutes.js"
+import highscoreRoute from "./routes/HighscoreRoutes.js"
 import swagger_output from './swagger_output.json' assert {type: "json"}
 
 import { errorHandler } from './utils/ErrorHandler.js';
@@ -26,6 +27,7 @@ app.use(morgan('[:mydate] :method :url :status :res[content-length] - :remote-ad
 // Routes
 app.use(["/user", "/users"], userRoute);
 app.use(["/card", "/cards"], cardRoute);
+app.use(["/highscore"], highscoreRoute);
 
 connectDb().then(() => {
     app.listen(PORT, () => {

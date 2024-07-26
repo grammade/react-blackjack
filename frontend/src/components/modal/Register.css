@@ -10,6 +10,10 @@
     top: 0;
 }
 
+.ModalHeader{
+  margin-bottom: 1rem;
+}
+
 .ModalContent{
     display: flex;
     background: linear-gradient(to bottom right, #530343, #01101f);
@@ -19,15 +23,37 @@
     min-width: 300px;
     min-height: 400px;
     padding: 1rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
     border-radius: 5px;
     flex-direction: column;
     align-items: center;
 }
 
 .ModalBody{
-    flex: 1;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    justify-content: space-between;
 }
-
+.TopBody{
+  width: 100%;
+}
+.HighScoreUser {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #4e284c;
+}
+.CurrentUser{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 10px;
+  border-bottom: 1px dotted #df10d4;
+}
 .IconGoogle{
     margin: 10px;
     cursor: pointer;
