@@ -21,6 +21,7 @@ const GameButton = ({
     const [btnStartText, setBtnStartText] = useState("START")
     const [btnEndText, setBtnEndText] = useState("gg")
     const [gameState, setGameState] = useState("pre")
+    const [animationClass, setAnimationClass] = useState("fade-in")
     const gameStateWrap = (state) => {
         setGameState(state)
         gameStateParent(state)
@@ -61,11 +62,11 @@ const GameButton = ({
         const session = await manageSession(uid)
         const result = await stand(uid, session);
         console.log("round result", result)
-        if(result === "v")
+        if (result === "v")
             setBtnEndText("Round won")
-        else if(result === "l")
+        else if (result === "l")
             setBtnEndText("Round lost")
-        else if(result === "d")
+        else if (result === "d")
             setBtnEndText("Draw")
         endRound(result)
         gameStateWrap("post")
@@ -121,6 +122,10 @@ const GameButton = ({
         if (gameState === "post") {
             setBtnStartText("START")
             updateWl()
+        }else if(gameState === "game"){
+            
+        }else if(gameState === "pre"){
+            
         }
     }, [gameState])
     return (
@@ -128,24 +133,28 @@ const GameButton = ({
             <div className="CenterButtons">
                 {gameState === "post" ? (
                     <button onClick={reset}
-                        style={{ width: '226px' }}
-                        className="Btn mx-1 my-1">
+                        className="Btn">
                         {btnEndText}
                     </button>
                 ) : (
                     <>
-                        <button onClick={handleHit}
-                            style={{ width: '100px' }}
-                            className={`Btn  mx-1 my-1`}>{btnStartText}</button>
-                        <button onClick={onStand}
-                            style={{ width: '100px' }}
-                            className={`Btn mx-1 my-1 ${gameState === "game" ? 'disabled' : ''}`}>STAND</button>
+                        {true && (
+                            <button onClick={handleHit}
+                                className={`Btn`}>{btnStartText}</button>
+                        )}
+
+                        {gameState === "game" && (
+                            <button onClick={onStand}
+                                className="Btn">
+                                STAND
+                            </button>
+                        )}
                     </>
                 )}
 
             </div>
-            <button onClick={openModal}
-                className={`Btn StickRight `}>Leaderboards</button>
+            {/* <button onClick={openModal}
+                className={`Btn StickRight `}>Leaderboards</button> */}
         </div>
     )
 }
