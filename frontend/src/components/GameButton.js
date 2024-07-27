@@ -120,43 +120,57 @@ const GameButton = ({
 
     useEffect(() => {
         if (gameState === "post") {
-            setBtnStartText("START")
             updateWl()
-        }else if(gameState === "game"){
-            
-        }else if(gameState === "pre"){
-            
         }
     }, [gameState])
+
+    const renderButtons = () => {
+        switch (gameState) {
+            case "pre":
+                return <StartButton onClick={handleHit}></StartButton>
+            case "game":
+                return (
+                    <>
+                        <HitButton onClick={handleHit}></HitButton>
+                        <StandButton onClick={onStand}></StandButton>
+                    </>
+                )
+            case "post":
+                return <ResetButton onClick={reset} className="" text={btnEndText}></ResetButton>
+            default:
+                break;
+        }
+    }
     return (
         <div className="BtnContainer">
             <div className="CenterButtons">
-                {gameState === "post" ? (
-                    <button onClick={reset}
-                        className="Btn">
-                        {btnEndText}
-                    </button>
-                ) : (
-                    <>
-                        {true && (
-                            <button onClick={handleHit}
-                                className={`Btn`}>{btnStartText}</button>
-                        )}
-
-                        {gameState === "game" && (
-                            <button onClick={onStand}
-                                className="Btn">
-                                STAND
-                            </button>
-                        )}
-                    </>
-                )}
-
+                {renderButtons()}
             </div>
             {/* <button onClick={openModal}
                 className={`Btn StickRight `}>Leaderboards</button> */}
         </div>
     )
 }
+
+const StartButton = ({ onClick, className}) => (
+    <button onClick={onClick} className={`Btn ${className}`}>
+        START
+    </button>
+)
+const HitButton = ({ onClick, className}) => (
+    <button onClick={onClick} className={`Btn ${className}`}>
+        HIT
+    </button>
+)
+const StandButton = ({ onClick, className}) => (
+    <button onClick={onClick} className={`Btn ${className}`}>
+        STAND
+    </button>
+)
+const ResetButton = ({ onClick , className, text}) => (
+    <button onClick={onClick} className={`Btn ${className}`}>
+        {text}
+    </button>
+)
 
 export default GameButton

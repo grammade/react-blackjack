@@ -152,9 +152,7 @@ router.post("/stand", asyncHandler(async (req, res) => {
     const result = handleState(currentHandSum, currentDealerHandSum)
     decks[sessionId].state = "end"
     if (uid.startsWith("guest")) {
-        return res.status(200).json({
-            result
-        })
+        return res.status(200).json(result)
     }
 
     const user = await User.findOne({ uid })
