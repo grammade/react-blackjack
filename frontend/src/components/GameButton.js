@@ -38,7 +38,7 @@ const GameButton = ({
         const uid = getUid()
         const session = await manageSession(uid)
 
-        const cardContainer = getContainerSize() - 20
+        const cardContainer = getContainerSize()
         let card = await drawCard(uid, session);
         if (card.suit === null) {
             console.log("card is depleted, regening the deck")

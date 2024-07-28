@@ -22,6 +22,7 @@ const BlackJackGame = ({ openModal }) => {
     const [localLoss, setLocalLoss] = useState(0)
     const [gameState, setGameState] = useState()
     const [cardWidth, setCardWidth] = useState(100)
+    const [dealerCardWidth, setDealerCardWidth] = useState(100)
     const [containerWidth, setContainerWidth] = useState(0)
     const [dealerCardClasses, setDealerCardClasses] = useState([])
     const [playerCardClasses, setPlayerCardClasses] = useState([])
@@ -41,6 +42,10 @@ const BlackJackGame = ({ openModal }) => {
             dealerHand = await drawCardDealer(session)
         }
         console.log(`dealer card drawn`)
+        
+        const cardWidth = Math.floor((containerWidth - (dealerHand.hand.length * 4)) / (dealerHand.hand.length));
+        console.log("cardWidth", cardWidth)
+        setDealerCardWidth(cardWidth)
         setDealerHand(dealerHand.hand)
         setDealerSum("?")
     }
@@ -116,7 +121,7 @@ const BlackJackGame = ({ openModal }) => {
         const getSize = () => {
             if (ref.current) {
                 if (ref.current.offsetWidth) {
-                    setContainerWidth(ref.current.offsetWidth)
+                    setContainerWidth(ref.current.offsetWidth - 20) //include padding
                 }
             }
         }
@@ -161,6 +166,7 @@ const BlackJackGame = ({ openModal }) => {
                                     cardValue={card.card}
                                     className={dealerCardClasses[index]}
                                     style={getStyle(index, dealerHand)}
+                                    width={dealerCardWidth}
                                 />
                             ))
                         }
