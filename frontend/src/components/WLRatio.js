@@ -1,4 +1,4 @@
-import {React, useEffect, useState} from "react";
+import { React, useEffect, useState } from "react";
 import menu from "../assets/menu.png"
 
 const Wl = ({
@@ -6,28 +6,26 @@ const Wl = ({
     openModal,
     wl
 }) => {
-    const [animationClass, setAnimationClass] = useState("")
-    const [style, setStyle] = useState("0%")
-    var i = 1
-    
-    useEffect(() =>{
-        setStyle(i * 100+"%")
-        console.log("style", style)
-        // if (wl === 'v') {
-        //     setStyle("background-position: 100%")
-        // } else  {
-        //     setAnimationClass('loss-animation');
-        // }
+    const [style, setStyle] = useState("50%")
+    const [trigger, setTrigger] = useState(0)
 
+    useEffect(() => {
+        console.log("wl animation", wl)
+        if (wl.res === "v"){
+            setStyle("100%")
+        }else{
+            setStyle("0%")
+        }
+        
+            
         const timer = setTimeout(() => {
-            setStyle(++i * 100+"%")
-        }, 1000); 
+            setStyle("50%")
+        }, 700)
+        return () => clearTimeout(timer)
+    }, [wl])
 
-        return () => clearTimeout(timer);
-    },[wl])
-    
     return (
-        <div className={`wl-ratio-container ${animationClass}`} style={{backgroundPosition: style}}>
+        <div className={`wl-ratio-container`} style={{ backgroundPosition: style }}>
             <h5 style={{ margin: 0 }}>W/L Ratio:</h5>
             <p id="wlRatio" className="dosis-regular" style={{ margin: 0 }}>{ratio}</p>
             <div className="highscore">
