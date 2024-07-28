@@ -15,7 +15,7 @@ const GameButton = ({
     resetDealer,
     updateWl,
     endRound,
-    gameStateParent }) => {
+    gameStateParent}) => {
     const { currentUser, userLoggedIn, loading, guestUid, signInGoogle, signOut, manageSession, getUid } = useAuth()
 
     const [btnEndText, setBtnEndText] = useState("gg")
@@ -66,6 +66,7 @@ const GameButton = ({
             setBtnEndText("Round lost")
         else if (result === "d")
             setBtnEndText("Draw")
+        
         endRound(result)
         gameStateWrap("post")
     }

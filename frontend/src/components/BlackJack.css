@@ -1,3 +1,14 @@
+:root{
+  --gradientWl: linear-gradient(
+    to right,
+    #081d30, 
+    #721b63,
+    #721b63,
+    #721b63,
+    #081d30
+  )
+}
+
 html,
 body,
 #root {
@@ -90,23 +101,26 @@ body {
   /* Even darker when clicked */
 }
 
+
+
 .wl-ratio-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(to left, #721b63, #081d30);
   width: 100%;
   padding: 10px;
   border-radius: 5px;
   position: relative;
+  background-image: var(--gradientWl);
+  background-size: 200%;
+  transition: background-position 1s ease;
 }
 
 .highscore{
   position: absolute;
   right: 0;
   padding-right: inherit;
-  
 }
 
 .headerContainer {

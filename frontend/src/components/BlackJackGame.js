@@ -26,6 +26,7 @@ const BlackJackGame = ({ openModal }) => {
     const [containerWidth, setContainerWidth] = useState(0)
     const [dealerCardClasses, setDealerCardClasses] = useState([])
     const [playerCardClasses, setPlayerCardClasses] = useState([])
+    const [roundResult, setRoundResult] = useState()
     const ref = useRef(null)
 
     const fetchDealerCard = async () => {
@@ -88,6 +89,7 @@ const BlackJackGame = ({ openModal }) => {
         console.log("holeCard", dealer)
 
         //reveal dealer cards
+        setRoundResult(res)
         setDealerHand(dealer.hand)
         setDealerSum(dealer.handSum)
     }
@@ -205,7 +207,8 @@ const BlackJackGame = ({ openModal }) => {
                 />
             </div>
             <Wl ratio={wlRatio}
-                openModal={openModal} />
+                openModal={openModal}
+                wl={roundResult} />
         </div>
     );
 }
