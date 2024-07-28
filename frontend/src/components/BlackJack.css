@@ -99,6 +99,14 @@ body {
   width: 100%;
   padding: 10px;
   border-radius: 5px;
+  position: relative;
+}
+
+.highscore{
+  position: absolute;
+  right: 0;
+  padding-right: inherit;
+  
 }
 
 .headerContainer {

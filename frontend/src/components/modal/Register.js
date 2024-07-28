@@ -16,8 +16,9 @@ const Register = ({ show, closeModal, animationClass, children }) => {
             setHighScore(res)
         }
 
-        fetch()
-    }, [])
+        if (show)
+            fetch()
+    }, [show])
 
     if (!show)
         return null;

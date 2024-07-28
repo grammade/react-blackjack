@@ -42,7 +42,7 @@ const BlackJackGame = ({ openModal }) => {
             dealerHand = await drawCardDealer(session)
         }
         console.log(`dealer card drawn`)
-        
+
         const cardWidth = Math.floor((containerWidth - (dealerHand.hand.length * 4)) / (dealerHand.hand.length));
         console.log("cardWidth", cardWidth)
         setDealerCardWidth(cardWidth)
@@ -197,7 +197,6 @@ const BlackJackGame = ({ openModal }) => {
                     setPlayerSum={setPlayerSum}
                     playerHand={playerHand}
                     setCardWidth={setCardWidth}
-                    openModal={openModal}
                     fetchDealerCard={fetchDealerCard}
                     resetDealer={resetDealer}
                     updateWl={updateWlRatio}
@@ -205,7 +204,8 @@ const BlackJackGame = ({ openModal }) => {
                     gameStateParent={setGameState}
                 />
             </div>
-            <Wl ratio={wlRatio} />
+            <Wl ratio={wlRatio}
+                openModal={openModal} />
         </div>
     );
 }

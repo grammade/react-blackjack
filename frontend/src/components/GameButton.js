@@ -18,7 +18,6 @@ const GameButton = ({
     gameStateParent }) => {
     const { currentUser, userLoggedIn, loading, guestUid, signInGoogle, signOut, manageSession, getUid } = useAuth()
 
-    const [btnStartText, setBtnStartText] = useState("START")
     const [btnEndText, setBtnEndText] = useState("gg")
     const [gameState, setGameState] = useState("pre")
     const [animationClass, setAnimationClass] = useState("fade-in")
@@ -29,7 +28,6 @@ const GameButton = ({
 
     const handleHit = async () => {
         if (gameState === "pre") {
-            setBtnStartText("HIT")
             gameStateWrap("game")
             await fetchDealerCard()
             return
@@ -146,25 +144,23 @@ const GameButton = ({
             <div className="CenterButtons">
                 {renderButtons()}
             </div>
-            {/* <button onClick={openModal}
-                className={`Btn StickRight `}>Leaderboards</button> */}
         </div>
     )
 }
 
 const StartButton = ({ onClick, className}) => (
     <button onClick={onClick} className={`Btn ${className}`}>
-        START
+        Starts round
     </button>
 )
 const HitButton = ({ onClick, className}) => (
     <button onClick={onClick} className={`Btn ${className}`}>
-        HIT
+        Hit
     </button>
 )
 const StandButton = ({ onClick, className}) => (
     <button onClick={onClick} className={`Btn ${className}`}>
-        STAND
+        Stand
     </button>
 )
 const ResetButton = ({ onClick , className, text}) => (
